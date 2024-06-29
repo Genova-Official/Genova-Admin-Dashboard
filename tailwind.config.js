@@ -11,6 +11,12 @@ module.exports = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      fontSize: {
+        sm: ['14px', '1.5rem'], // 14px
+        base: ['20px', '1.5rem'], // 20px
+        lg: ['24px', '1.5rem'], // 24px
+        xl: ['32px', '1.5rem'], // 32px
+      },
       colors: {
         primary: '#1a202c', // Example primary color
         secondary: '#2d3748', // Example secondary color

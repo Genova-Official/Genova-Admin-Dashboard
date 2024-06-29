@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 const Button = ({
   title,
+  type = 'button',
   size = 'medium',
   color = 'gray',
   isBorder = false,
@@ -23,19 +24,21 @@ const Button = ({
     green: 'bg-green-dark text-white hover:bg-green-light',
     blue: 'bg-blue-500 text-white hover:bg-blue-600',
     gray: 'bg-gray-300 text-gray-800 hover:bg-gray-400',
+    accent: 'bg-accent text-white hover:bg-accent-400',
   };
 
   const borderStyles = isBorder ? 'border border-gray-300' : '';
 
   return (
     <button
+      type={type}
       onClick={onClick}
       className={classNames(
         baseStyles,
         sizeStyles[size],
         colorStyles[color],
         borderStyles,
-        'flex items-center gap-2'
+        'flex items-center justify-center gap-2 text-center'
       )}
     >
       {icon && React.createElement(icon.type, { ...iconProps })}
@@ -46,8 +49,9 @@ const Button = ({
 
 Button.propTypes = {
   title: PropTypes.string.isRequired,
+  type: PropTypes.string,
   size: PropTypes.oneOf(['small', 'medium', 'large']),
-  color: PropTypes.oneOf(['red', 'green', 'blue', 'gray']),
+  color: PropTypes.oneOf(['red', 'green', 'blue', 'gray', 'accent']),
   isBorder: PropTypes.bool,
   onClick: PropTypes.func,
   icon: PropTypes.element,

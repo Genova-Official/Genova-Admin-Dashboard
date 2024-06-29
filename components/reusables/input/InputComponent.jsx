@@ -1,56 +1,64 @@
-import { useState, forwardRef } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import DatePickerIcon from "../icons/DatePickerIcon";
+import React, { useState, forwardRef } from 'react';
+import PropTypes from 'prop-types';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+// import DatePickerIcon from '../icons/DatePickerIcon';
 
 const InputComponent = forwardRef(
   (
     {
-      type,
-      placeholder,
-      disabled,
-      password,
-      label,
-      error,
-      register,
-      accept,
-      date,
+      type = 'text',
+      placeholder = '',
+      disabled = false,
+      password = false,
+      label = '',
+      error = false,
+      register = {},
+      accept = '',
+      date = false,
+      borderStyle = 'full',
     },
     ref
   ) => {
     const [passwordType, setPasswordType] = useState(type);
+
     const passwordToggle = () => {
-      if (passwordType === "text") {
+      if (passwordType === 'text') {
         return (
           <FaEye
-            className="text-gray-400 h-5 w-5 mx-2 cursor-pointer"
-            onClick={() => setPasswordType("password")}
+            className="text-accent h-5 w-5 mx-2 cursor-pointer"
+            onClick={() => setPasswordType('password')}
           />
         );
-      } else if (passwordType === "password") {
+      } else if (passwordType === 'password') {
         return (
           <FaEyeSlash
-            className="text-gray-400 h-5 w-5 mx-2 cursor-pointer"
-            onClick={() => setPasswordType("text")}
+            className="text-accent h-5 w-5 mx-2 cursor-pointer"
+            onClick={() => setPasswordType('text')}
           />
         );
       } else return null;
     };
 
+    const baseInputClass =
+      'w-full py-1 px-3 outline-none border-none bg-inherit rounded-md no-number-arrows';
+
+    const borderClass =
+      borderStyle === 'bottom'
+        ? 'border-b-2 border-accent'
+        : 'border border-accent rounded-md';
+
     return (
-      <div className="grid gap-1">
+      <div className="grid ">
         <p className="text-[#000] font-medium text-sm">{label}</p>
         <div className="grid gap-1">
           <div
-            className={
-              error
-                ? "relative flex items-center bg-transparent border border-red-600 rounded-md text-[#010101] text-base w-full"
-                : "relative flex items-center bg-transparent border border-[#A9A9A9] rounded-md text-[#010101] text-base w-full"
-            }
+            className={`relative flex items-center bg-transparent ${borderClass} text-[#010101] text-base w-full ${
+              error ? 'border-red-600' : ''
+            }`}
           >
-            {price && <span className="ml-3">&#8358;</span>}
             <input
               ref={ref}
-              className="w-full py-3 px-3 outline-none border-none bg-inherit rounded-md no-number-arrows"
+              className={baseInputClass}
               type={passwordType}
               placeholder={placeholder}
               {...register}
@@ -58,11 +66,11 @@ const InputComponent = forwardRef(
               accept={accept}
             />
             {password && passwordToggle()}
-            {date && (
+            {/* {date && (
               <div className="cursor-pointer">
                 <DatePickerIcon />
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
@@ -70,6 +78,19 @@ const InputComponent = forwardRef(
   }
 );
 
-InputComponent.displayName = 'InputComponent'; 
+InputComponent.displayName = 'InputComponent';
+
+InputComponent.propTypes = {
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
+  disabled: PropTypes.bool,
+  password: PropTypes.bool,
+  label: PropTypes.string,
+  error: PropTypes.bool,
+  register: PropTypes.object,
+  accept: PropTypes.string,
+  date: PropTypes.bool,
+  borderStyle: PropTypes.oneOf(['full', 'bottom']),
+};
 
 export default InputComponent;
