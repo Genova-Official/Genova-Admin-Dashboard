@@ -37,9 +37,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Poppins', 'sans-serif'],
-        serif: ['Merriweather', 'serif'],
-        // Add other custom fonts here
+        inter: ['Inter', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif']
       },
     },
   },

@@ -1,19 +1,21 @@
 "use client";
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
-import {  FaCog, FaSignOutAlt } from 'react-icons/fa';
+import {  FaSignOutAlt } from 'react-icons/fa';
 import { sideData } from './data';
 import { RxDashboard } from "react-icons/rx";
 import { GoPerson } from "react-icons/go";
 import { BsListColumnsReverse } from "react-icons/bs";
+import { RiUserSettingsLine } from "react-icons/ri";
+import Support from '@/components/icons/Support';
 
 const iconMap = {
   home: RxDashboard,
-  user: GoPerson,
+  customer: GoPerson,
   transaction: BsListColumnsReverse,
-  settings: FaCog,
+  settings: RiUserSettingsLine,
+  support: Support,
   logout: FaSignOutAlt,
 };
 

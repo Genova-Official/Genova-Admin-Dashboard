@@ -5,9 +5,9 @@ export const sideData = [
       icon: 'home',
     },
     {
-      title: 'User',
-      link: '/dashboard/user',
-      icon: 'user',
+      title: 'Customer',
+      link: '/dashboard/customer',
+      icon: 'customer',
     },
     {
       title: 'Transactions',
@@ -18,6 +18,11 @@ export const sideData = [
       title: 'Settings',
       link: '/dashboard/settings',
       icon: 'settings',
+    },
+    {
+      title: 'Support',
+      link: '/dashboard/support',
+      icon: 'support',
     },
     // Add other items as needed
   ];

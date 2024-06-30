@@ -26,7 +26,7 @@ export default function Login() {
             password
             borderStyle="bottom"
           />
-          <Typography variant="h2" size="sm" className={"text-start my-2"}>Forgot Password?</Typography>
+          <Typography variant="h2" size="sm" className={"text-start text-accent my-2"}>Forgot Password?</Typography>
 
           <Button title="Login" color="accent" type="submit" />
           <div className="flex justify-center -mt-2 mb-10 items-center">
