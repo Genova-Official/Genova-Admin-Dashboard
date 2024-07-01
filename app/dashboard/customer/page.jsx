@@ -28,12 +28,16 @@ export default function Customers() {
       key: "status",
       render: (data) => (
         <span
-          className={`py-1 px-3 rounded-full text-white ${
-            data.status === "Active" ? "bg-green-500" : "bg-red-500"
-          }`}
-        >
-          {data.status}
-        </span>
+      className={`py-2 px-4 rounded-full border ${
+        data.status === "Active"
+          ? "bg-green/30 border-[#4BB543] text-green"
+          : data.status === "Failed"
+          ? "bg-[#FF9494]/30 border-[#FF9494] text-red"
+          : "bg-[#F7CB73]/20 border-[#F7CB73] text-[#F7CB73]"
+      }`}
+    >
+      {data.status}
+    </span>
       ),
     },
   ];
@@ -58,28 +62,21 @@ export default function Customers() {
       email: "johndoe@gmail.com",
       phone: "070-6553-2673",
       bvn: "3537487526",
-      status: "Inactive",
+      status: "Failed",
     },
     {
       name: "John Doe",
       email: "johndoe@gmail.com",
       phone: "070-6553-2673",
       bvn: "3537487526",
-      status: "Inactive",
+      status: "Failed",
     },
     {
       name: "John Doe",
       email: "johndoe@gmail.com",
       phone: "070-6553-2673",
       bvn: "3537487526",
-      status: "Active",
-    },
-    {
-      name: "John Doe",
-      email: "johndoe@gmail.com",
-      phone: "070-6553-2673",
-      bvn: "3537487526",
-      status: "Active",
+      status: "Pending",
     },
     {
       name: "John Doe",
@@ -93,7 +90,14 @@ export default function Customers() {
       email: "johndoe@gmail.com",
       phone: "070-6553-2673",
       bvn: "3537487526",
-      status: "Inactive",
+      status: "Active",
+    },
+    {
+      name: "John Doe",
+      email: "johndoe@gmail.com",
+      phone: "070-6553-2673",
+      bvn: "3537487526",
+      status: "Failed",
     },
   ];
 
