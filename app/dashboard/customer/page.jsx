@@ -74,10 +74,10 @@ export default function Customers() {
         data={data}
         isGray={false}
         onRowClick={(rowData) => {
-          if (rowData.id) {
-            router.push(`/dashboard/customer/${rowData.id}`);
+          if (rowData?.id) {
+            router.push(`/dashboard/customer/${rowData?.id}`);
           } else {
-            console.error('ID not found in row data');
+            console.error('ID not found in row data')
           }
         }}      />
     </section>

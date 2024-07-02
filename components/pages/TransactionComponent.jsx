@@ -8,9 +8,7 @@ export default function TransactionComponent({
 }) {
   return (
     <div>
-      {/* <Typography size="lg" variant="h3" className="text-accent mb-4">
-        Transactions
-      </Typography> */}
+    
       <Table
         columns={transactionColumns}
         data={transactionData}

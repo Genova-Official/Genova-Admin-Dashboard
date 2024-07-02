@@ -1,4 +1,4 @@
-// "use client"
+"use client"
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -17,7 +17,7 @@ const Table = ({ columns, data, onRowClick }) => {
 
   const tableData = data.map((data, i) => (
     <tr
-    onClick={()=>onRowClick(data)}
+    onClick={()=>onRowClick && onRowClick(data)}
       key={`column${i}`}
       className={`text-center text-sm font-Poppins text-accent  ${data.status === "Active"? "hover:bg-green/30" : (data.status === "Failed") ?  "hover:bg-red/30" :"hover:bg-[#F7CB73]/20"} `}
     >
