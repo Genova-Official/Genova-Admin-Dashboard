@@ -2,13 +2,14 @@
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import {  FaSignOutAlt } from 'react-icons/fa';
+import { FaSignOutAlt } from 'react-icons/fa';
 import { sideData } from './data';
 import { RxDashboard } from "react-icons/rx";
 import { GoPerson } from "react-icons/go";
 import { BsListColumnsReverse } from "react-icons/bs";
 import { RiUserSettingsLine } from "react-icons/ri";
 import Support from '@/components/icons/Support';
+import Logout from '@/components/icons/Logout';
 
 const iconMap = {
   home: RxDashboard,
@@ -20,16 +21,16 @@ const iconMap = {
 };
 
 export default function SideNav({ ...props }) {
-const pathname = usePathname()
-    const [activeItem, setActiveItem] = useState('');
-console.log(pathname)
+  const pathname = usePathname();
+  const [activeItem, setActiveItem] = useState('');
+
   const handleSetActive = (itemLink) => {
     setActiveItem(itemLink);
   };
 
   return (
-    <menu {...props}>
-      <nav className="mx-auto flex flex-col gap-3">
+    <menu {...props} className="flex flex-col h-full p-6 flex-none shadow-lg w-64">
+      <nav className="flex-grow flex flex-col gap-3">
         {sideData.map((item, idx) => {
           const IconComponent = iconMap[item.icon];
           const isActive = pathname === item.link;
@@ -48,10 +49,9 @@ console.log(pathname)
           );
         })}
       </nav>
-
-      <span className="mx-auto mt-auto py-3 mb-7 flex items-center gap-5 font-poppins text-base text-white transition-all duration-200 hover:scale-95">
-        <FaSignOutAlt size={24} />
-        Logout
+      <span className="py-3 mb-7 flex items-center gap-5 cursor-pointer font-poppins text-black hover:text-accent transition-all duration-200 hover:scale-95">
+        <Logout />
+        Signout
       </span>
     </menu>
   );

@@ -13,6 +13,8 @@ const InputComponent = forwardRef(
       label = '',
       error = false,
       register = {},
+      labelColor = '#000',
+
       accept = '',
       date = false,
       borderStyle = 'full',
@@ -49,10 +51,10 @@ const InputComponent = forwardRef(
 
     return (
       <div className="grid ">
-        <p className="text-[#000] font-medium text-sm">{label}</p>
+        <p className="font-medium text-sm" style={{ color: labelColor }}>{label} </p>
         <div className="grid gap-1">
           <div
-            className={`relative flex items-center bg-transparent ${borderClass} text-[#010101] text-base w-full ${
+            className={`relative flex items-center py-2 bg-transparent ${borderClass} text-[#010101] text-base w-full ${
               error ? 'border-red-600' : ''
             }`}
           >
@@ -66,11 +68,7 @@ const InputComponent = forwardRef(
               accept={accept}
             />
             {password && passwordToggle()}
-            {/* {date && (
-              <div className="cursor-pointer">
-                <DatePickerIcon />
-              </div>
-            )} */}
+           
           </div>
         </div>
       </div>
@@ -86,6 +84,7 @@ InputComponent.propTypes = {
   disabled: PropTypes.bool,
   password: PropTypes.bool,
   label: PropTypes.string,
+  labelColor: PropTypes.string,
   error: PropTypes.bool,
   register: PropTypes.object,
   accept: PropTypes.string,

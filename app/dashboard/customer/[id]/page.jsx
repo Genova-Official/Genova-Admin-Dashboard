@@ -13,7 +13,7 @@ import ProfileComponent from "@/components/pages/ProfileComponent";
 const CustomerDetails = () => {
   const { id } = useParams();
 
-  const selecteddata = data.find((customer) => customer?.id == id);
+  const selecteddata = data?.find((customer) => customer?.id == id);
 
   const tabs = [
     {
