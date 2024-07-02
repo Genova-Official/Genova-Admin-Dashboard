@@ -1,7 +1,8 @@
+// "use client"
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Table = ({ columns, data }) => {
+const Table = ({ columns, data, onRowClick }) => {
   const colHeaders = columns.map(({ title, key }) => (
     <th
       key={key}
@@ -16,13 +17,14 @@ const Table = ({ columns, data }) => {
 
   const tableData = data.map((data, i) => (
     <tr
+    onClick={()=>onRowClick(data)}
       key={`column${i}`}
       className={`text-center text-sm font-Poppins text-accent  ${data.status === "Active"? "hover:bg-green/30" : (data.status === "Failed") ?  "hover:bg-red/30" :"hover:bg-[#F7CB73]/20"} `}
     >
       {columns.map(({ render }, id) => (
         <td key={`data${i}${id}`} className="py-4 px-6  border-gray-200">
-          {render(data, i)}
-        </td>
+          {render ? render(data, i) : data[id]}
+          </td>
       ))}
     </tr>
   ));
@@ -47,6 +49,10 @@ Table.propTypes = {
       render: PropTypes.func.isRequired,
     })
   ).isRequired,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+
+  onRowClick: PropTypes.func
+
 //   data: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
