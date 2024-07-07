@@ -7,6 +7,19 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        bounce: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+      },
+      animation: {
+        bounce: 'bounce 0.6s infinite ease-in-out alternate',
+      },
+      animationDelay: {
+        200: '0.2s',
+        400: '0.4s',
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
@@ -42,5 +55,16 @@ module.exports = {
       },
     },
   },
-  plugins: [],
-};
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.delay-200': {
+          animationDelay: '0.2s',
+        },
+        '.delay-400': {
+          animationDelay: '0.4s',
+        },
+      };
+      addUtilities(newUtilities, ['responsive', 'hover']);
+    },
+  ],};
