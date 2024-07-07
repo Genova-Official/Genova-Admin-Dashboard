@@ -18,7 +18,7 @@ export default function Dashboard() {
         <Typography size="xl" variant="h2" className={"text-accent"}>
           Quick Overview
         </Typography>
-        <div className="flex space-x-4 p-4">
+        <div className="flex xl:flex-row md:flex-row flex-col gap-y-4 gap-x-4 p-4">
           <DashboardCard
             icon={<FaUser />}
             title="Total Customers"
@@ -38,7 +38,7 @@ export default function Dashboard() {
           />
         </div>
       </div>
-      <div className="flex justify-between items-center py-8">
+      <div className="flex md:flex-row flex-col justify-between gap-y-5 md:items-center  py-8">
         <Typography size="lg" variant="body" className={"text-accent"}>
           Recent Transactions
         </Typography>

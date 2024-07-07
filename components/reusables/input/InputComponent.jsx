@@ -63,7 +63,7 @@ const InputComponent = forwardRef(
               placeholder={placeholder}
               disabled={disabled}
               accept={accept}
-              {...register(name)}
+              {...(register && register(name))} // Ensure register is a function and used correctly
             />
             {password && passwordToggle()}
           </div>
