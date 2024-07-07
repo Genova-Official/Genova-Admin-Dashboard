@@ -1,5 +1,5 @@
 "use client";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Typography from "@/components/reusables/typography/Typography";
 import {
   data,
@@ -15,8 +15,6 @@ const CustomerDetails = () => {
   const { id } = useParams();
   const {data: customer_details} = useSWR(`/adminapp/user/${id}`)
   const {data: customer_detail} = useSWR(`/user/${id}`)
-  const selecteddata = data?.find((customer) => customer?.id == id);
-console.log(customer_detail, customer_details)
   const tabs = [
     {
       label: "Transactions",

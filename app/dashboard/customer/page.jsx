@@ -10,9 +10,8 @@ import useSWR from "swr";
 
 export default function Customers() {
   const router = useRouter();
-  const {data: customer } = useSWR("/adminapp/customers/")
+  const {data: customer, isLoading } = useSWR("/adminapp/customers/")
 
-console.log(customer)
  
 
   return (
@@ -36,6 +35,7 @@ console.log(customer)
       <Table
         columns={customer_column}
         data={customer}
+        isLoading={isLoading}
         isGray={false}
         onRowClick={(rowData) => {
           if (rowData?.id) {

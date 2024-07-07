@@ -7,7 +7,7 @@ import useFormattedPrice from '@/hooks/useFormattedPrice';
 const DashboardCard = ({ icon, title, value, isAmount }) => {
   const formattedPrice = useFormattedPrice(value)
   return (
-    <div className="bg-white p-4 border rounded-md shadow-md flex flex-col items-start gap-2 w-[243px] h-[145px]">
+    <div className="bg-white p-4 border rounded-md shadow-md flex flex-col items-start gap-2 w-full  md:w-[273px] h-[145px]">
       <div className="flex items-center gap-2">
         <div className="bg-purple-200 p-2 rounded-full">
           {/* <IconContext value={{ className: "text-purple-600 h-6 w-6" }}>
