@@ -2,8 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { IconContext } from 'react-icons';
+import useFormattedPrice from '@/hooks/useFormattedPrice';
 
-const DashboardCard = ({ icon, title, value }) => {
+const DashboardCard = ({ icon, title, value, isAmount }) => {
+  const formattedPrice = useFormattedPrice(value)
   return (
     <div className="bg-white p-4 border rounded-md shadow-md flex flex-col items-start gap-2 w-[243px] h-[145px]">
       <div className="flex items-center gap-2">
@@ -15,7 +17,7 @@ const DashboardCard = ({ icon, title, value }) => {
         </div>
         <span className="text-gray-700 font-medium text-base">{title}</span>
       </div>
-      <span className="text-accent my-3 font-bold text-3xl">{value}</span>
+      <span className="text-accent my-3 font-bold text-3xl">{ isAmount? formattedPrice : value}</span>
     </div>
   );
 };

@@ -9,12 +9,14 @@ import {
 import Tab from "@/components/reusables/Tab";
 import TransactionComponent from "@/components/pages/TransactionComponent";
 import ProfileComponent from "@/components/pages/ProfileComponent";
+import useSWR from "swr";
 
 const CustomerDetails = () => {
   const { id } = useParams();
-
+  const {data: customer_details} = useSWR(`/adminapp/user/${id}`)
+  const {data: customer_detail} = useSWR(`/user/${id}`)
   const selecteddata = data?.find((customer) => customer?.id == id);
-
+console.log(customer_detail, customer_details)
   const tabs = [
     {
       label: "Transactions",
@@ -66,12 +68,13 @@ const CustomerDetails = () => {
           <div className="bg-gray-100 grid gap-2 text-accent border border-gray-300 w-[350px] p-4 rounded-lg">
             <div className="bg-gray-500 h-[70px] w-[70px] rounded-[50%]"></div>
             <Typography variant="h3" size="md">
-              {selecteddata.name}
+              {customer_detail?.first_name} { " "}
+              {customer_detail?.last_name}
             </Typography>
-            <Typography size="sm">{selecteddata.email}</Typography>
-            <Typography className="text-accent" size="sm">
+            <Typography size="sm">{customer_detail?.email}</Typography>
+            {/* <Typography className="text-accent" size="sm">
               User since 08/08/2007
-            </Typography>
+            </Typography> */}
           </div>
         </div>
       </div>

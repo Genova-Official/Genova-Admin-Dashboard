@@ -1,7 +1,6 @@
 import React, { useState, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-// import DatePickerIcon from '../icons/DatePickerIcon';
 
 const InputComponent = forwardRef(
   (
@@ -12,12 +11,11 @@ const InputComponent = forwardRef(
       password = false,
       label = '',
       error = false,
-      register = {},
       labelColor = '#000',
-
       accept = '',
-      date = false,
       borderStyle = 'full',
+      register,
+      name,
     },
     ref
   ) => {
@@ -50,8 +48,8 @@ const InputComponent = forwardRef(
         : 'border border-accent rounded-md';
 
     return (
-      <div className="grid ">
-        <p className="font-medium text-sm" style={{ color: labelColor }}>{label} </p>
+      <div className="grid">
+        <p className="font-medium text-sm" style={{ color: labelColor }}>{label}</p>
         <div className="grid gap-1">
           <div
             className={`relative flex items-center py-2 bg-transparent ${borderClass} text-[#010101] text-base w-full ${
@@ -63,13 +61,13 @@ const InputComponent = forwardRef(
               className={baseInputClass}
               type={passwordType}
               placeholder={placeholder}
-              {...register}
               disabled={disabled}
               accept={accept}
+              {...(register && register(name))} // Ensure register is a function and used correctly
             />
             {password && passwordToggle()}
-           
           </div>
+          {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
         </div>
       </div>
     );
@@ -85,10 +83,10 @@ InputComponent.propTypes = {
   password: PropTypes.bool,
   label: PropTypes.string,
   labelColor: PropTypes.string,
-  error: PropTypes.bool,
-  register: PropTypes.object,
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  register: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
   accept: PropTypes.string,
-  date: PropTypes.bool,
   borderStyle: PropTypes.oneOf(['full', 'bottom']),
 };
 

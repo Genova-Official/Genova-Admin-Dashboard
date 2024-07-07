@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Table = ({ columns, data, onRowClick }) => {
-  const colHeaders = columns.map(({ title, key }) => (
+  const colHeaders = columns?.map(({ title, key }) => (
     <th
       key={key}
       className=" text-white   uppercase"
@@ -15,11 +15,11 @@ const Table = ({ columns, data, onRowClick }) => {
     </th>
   ));
 
-  const tableData = data.map((data, i) => (
+  const tableData = data && data?.map((data, i) => (
     <tr
     onClick={()=>onRowClick && onRowClick(data)}
       key={`column${i}`}
-      className={`text-center text-sm font-Poppins text-accent cursor-pointer  ${data.status === "Success" || data.status === "Active"  ? "hover:bg-green/30" : (data.status === "Failed") ?  "hover:bg-red/30" :"hover:bg-[#F7CB73]/20"} `}
+      className={`text-left text-sm font-Poppins text-accent cursor-pointer  ${data.status === "Success" || data.status === "Active"  ? "hover:bg-green/30" : (data.status === "Failed") ?  "hover:bg-red/30" :"hover:bg-[#F7CB73]/20"} `}
     >
       {columns.map(({ render }, id) => (
         <td key={`data${i}${id}`} className="py-4 px-6  border-gray-200">
