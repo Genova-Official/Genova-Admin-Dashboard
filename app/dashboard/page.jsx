@@ -6,9 +6,12 @@ import React from "react";
 import { FaFilter, FaUser, } from "react-icons/fa";
 import { BsBoxArrowInDownRight, BsBoxArrowUpRight, BsPersonFill } from "react-icons/bs";
 import { columns, data } from "@/lib/constants/dashboardData";
+import useSWR from "swr";
 
 export default function Dashboard() {
- 
+ const {data: dashboard } = useSWR("/adminapp/dashboard/")
+//  const 
+ console.log(dashboard)
   return (
     <section className="p-4 font-poppins">
       <div className="py-8">
@@ -19,17 +22,19 @@ export default function Dashboard() {
           <DashboardCard
             icon={<FaUser />}
             title="Total Customers"
-            value="11,000"
+            value={dashboard?.total_customers ?? 0}
           />
           <DashboardCard
             icon={<BsBoxArrowInDownRight />}
             title="Total Inflow"
-            value="11,000"
+            isAmount
+            value={dashboard?.total_inflow ?? 0}
           />
           <DashboardCard
             icon={<BsBoxArrowUpRight />}
             title="Total Outflow"
-            value="11,000"
+            isAmount
+            value={dashboard?.total_outflow ?? 0}
           />
         </div>
       </div>
@@ -46,7 +51,7 @@ export default function Dashboard() {
           
         </div>
       </div>
-      <Table columns={columns} data={data} isGray={false} />
+      <Table columns={columns} data={dashboard?.recent_transactions ?? []} isGray={false} />
     </section>
   );
 }
