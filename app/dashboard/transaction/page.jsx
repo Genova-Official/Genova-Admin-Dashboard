@@ -7,8 +7,10 @@ import { FaFilter, FaUser, } from "react-icons/fa";
 import { BsBoxArrowInDownRight, BsBoxArrowUpRight, BsPersonFill } from "react-icons/bs";
 import { columns, data } from "@/lib/constants/dashboardData";
 import { BiExport } from "react-icons/bi";
+import useSWR from "swr";
 
 export default function Transactions() {
+  const {data: dashboard, isLoading } = useSWR("/adminapp/dashboard/")
 
 
   return (
@@ -47,7 +49,7 @@ export default function Transactions() {
           
         </div>
       </div>
-      <Table columns={columns} data={data} isGray={false} />
+      <Table columns={columns} data={dashboard?.recent_transactions} isGray={false} isLoading={isLoading} />
     </section>
   );
 }

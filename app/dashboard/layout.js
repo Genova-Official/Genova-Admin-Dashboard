@@ -15,7 +15,7 @@ export default function DashboardLayout({ children, ...props }) {
   }
 
   return (
-    <div className="relative min-w-[20em] max-w-full h-screen mx-auto flex flex-col overflow-hidden">
+    <main className="relative min-w-[20em] max-w-full h-screen mx-auto flex flex-col overflow-hidden">
       <TopNav />
       <div className="flex flex-1 overflow-hidden">
         <SideNav className="flex-none shadow-lg w-full md:w-64 p-4" />
@@ -23,6 +23,6 @@ export default function DashboardLayout({ children, ...props }) {
           {children}
         </div>
       </div>
-    </div>
+    </main>
   );
 }
