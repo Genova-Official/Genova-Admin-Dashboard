@@ -10,33 +10,38 @@ import Tab from "@/components/reusables/Tab";
 import TransactionComponent from "@/components/pages/TransactionComponent";
 import ProfileComponent from "@/components/pages/ProfileComponent";
 import useSWR from "swr";
+import useFormattedPrice from "@/hooks/useFormattedPrice";
 
 const CustomerDetails = () => {
   const { id } = useParams();
-  const {data: customer_details} = useSWR(`/adminapp/user/${id}`)
+  const {data: customer_details} = useSWR(`/adminapp/user-information/${id}`)
+  const {data: customer_transaction} = useSWR(`/adminapp/user-transaction/${id}`)
   const {data: customer_detail} = useSWR(`/user/${id}`)
+  console.log(customer_details)
+
+  const formattedPrice = useFormattedPrice(customer_details?.wallet_balance, "NGN")
   const tabs = [
     {
       label: "Transactions",
       content: (
         <TransactionComponent
           transactionColumns={transactionColumns}
-          transactionData={transactionData}
+          transactionData={customer_transaction?.transaction_history ?? []}
         />
       ),
     },
     { label: "Profile Information", content: <ProfileComponent /> },
   ];
   return (
-    <div className="mt-8 p-4 bg-white ">
-      <div className="flex justify-between items-center">
-        <div className="flex gap-8 items-center">
-          <div className="bg-[#6666FF] grid gap-9 w-[350px] p-4 tex-white rounded-md">
+    <div className="mt-8 xl:p-4  mb-[100px] xl:mb-0  p-1  bg-white ">
+      <div className="flex ">
+        <div className="flex xl:flex-row w-full sm:flex-row flex-col gap-8 items-center">
+          <div className="bg-[#6666FF] grid gap-9 xl:w-[350px] w-[100%] p-4 tex-white rounded-md">
             <Typography variant="h4" className={"text-white"} size="sm">
               Total Balance
             </Typography>
             <Typography variant="h1" size="xl" className="text-white">
-              NGN100,000
+              {formattedPrice}
             </Typography>
             <div className="">
               <Typography className="text-white" variant="body" size="sm">
@@ -47,7 +52,7 @@ const CustomerDetails = () => {
               </Typography>
             </div>
           </div>
-          <div className="bg-[#FFCC66] grid gap-9 w-[350px] text-black p-4 rounded-md">
+          <div className="bg-[#FFCC66] grid gap-9 xl:w-[350px] w-[100%]  text-black p-4 rounded-md">
             <Typography variant="h4" className="text-black" size="sm">
               Virtual Account Balance
             </Typography>
@@ -59,11 +64,11 @@ const CustomerDetails = () => {
                 Account Number
               </Typography>
               <Typography className="text-black" variant="body" size="sm">
-                9857374832
+                {customer_details?.user_information?.account_number ?? "Not Available"}
               </Typography>
             </div>
           </div>
-          <div className="bg-gray-100 grid gap-2 text-accent border border-gray-300 w-[350px] p-4 rounded-lg">
+          <div className="bg-gray-100 grid gap-2 text-accent border border-gray-300 xl:w-[350px] w-[100%] p-4 rounded-lg">
             <div className="bg-gray-500 h-[70px] w-[70px] rounded-[50%]"></div>
             <Typography variant="h3" size="md">
               {customer_detail?.first_name} { " "}

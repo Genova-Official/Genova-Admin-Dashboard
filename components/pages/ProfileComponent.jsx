@@ -8,12 +8,12 @@ export default function ProfileComponent() {
       <Typography size="lg" variant="h3" className="text-accent mb-4">
         Profile Information
       </Typography>
-      <div className="personalData  items-center grid grid-cols-3 px-8 py-9">
+      <div className="personalData  items-center grid md:grid-cols-3 grid-cols-1 px-8 py-9">
         <Typography size="md" variant="h2" className="text-accent py-4 mb-2">
           Personal Data
         </Typography>
 
-        <div className="  col-span-2 grid grid-cols-2 gap-4 gap-y-[50px]">
+        <div className="  md:col-span-2 col-span-1 grid grid-cols-2 gap-4 gap-y-[50px]">
           <InputComponent
             placeholder="Name"
             label="Name"
@@ -37,12 +37,12 @@ export default function ProfileComponent() {
         </div>
       </div>
       <hr className=" my-3 bg-accent" />
-      <div className="account  items-center grid grid-cols-3 px-8 py-9">
+      <div className="account  items-center grid md:grid-cols-3 grid-cols-1 px-8 py-9">
         <Typography size="md" variant="h2" className="text-accent py-4 mb-2">
           Account Information
         </Typography>
 
-        <div className="  col-span-2 grid grid-cols-2 gap-4 gap-y-[50px]">
+        <div className="  md:col-span-2 col-span-1 grid grid-cols-2 gap-4 gap-y-[50px]">
           <InputComponent
             placeholder="Account name"
             label="Account Name"
@@ -66,12 +66,12 @@ export default function ProfileComponent() {
         </div>
       </div>
       <hr className=" my-3 bg-accent" />
-      <div className="account  items-center grid grid-cols-3 px-8 py-9">
+      <div className="account  items-center  grid grid-cols-1 md:grid-cols-3 px-8 py-9">
         <Typography size="md" variant="h2" className="text-accent py-4 mb-2">
           Card Information
         </Typography>
 
-        <div className="  col-span-2 grid grid-cols-2 gap-4 gap-y-[50px]">
+        <div className=" col-span-1  md:col-span-2 grid grid-cols-2 gap-4 gap-y-[50px]">
           <InputComponent
             placeholder="Card Number"
             label="Card Number"

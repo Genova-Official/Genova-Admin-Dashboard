@@ -8,7 +8,7 @@ const Tab = ({ tabs }) => {
 
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full md:flex-row flex-col-reverse md:items-center gap-y-8  justify-between">
         <div className="flex gap-7 border-gray-300 mb-4">
           {tabs.map((tab) => (
             <button
@@ -24,7 +24,7 @@ const Tab = ({ tabs }) => {
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-8 self-end">
           <div className="export px-4 text-accent text-lg flex items-center gap-2 border border-gray-500 rounded-lg p-3">
             <BiExport />
             <Typography>Export</Typography>
