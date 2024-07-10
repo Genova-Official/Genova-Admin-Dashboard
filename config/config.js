@@ -16,7 +16,7 @@ export default function init() {
       .find((row) => row.startsWith("gen_token"));
       
     const accessValue = accessCookie ? accessCookie.split("=")[1] : null;
-
+console.log(accessValue)
     axios.defaults.baseURL = API_URL;
     axios.defaults.withCredentials = false;
 

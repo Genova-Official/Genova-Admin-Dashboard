@@ -21,7 +21,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 flex justify-around">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white shadow-lg py-4 px-2 flex gap-2 justify-around">
       {sideData.map((item, idx) => {
         const IconComponent = iconMap[item.icon];
         const isActive = pathname === item.link;
