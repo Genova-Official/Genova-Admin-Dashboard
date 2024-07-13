@@ -28,6 +28,9 @@ export default function SideNav({ ...props }) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    if (typeof window === 'undefined') {
+    return null
+    }
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768); // Adjust this breakpoint as per your design
     };
