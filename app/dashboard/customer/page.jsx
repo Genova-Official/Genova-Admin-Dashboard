@@ -5,7 +5,7 @@ import Table from "@/components/reusables/table/Table";
 import Typography from "@/components/reusables/typography/Typography";
 import { BiExport } from "react-icons/bi";
 import { FaFilter } from "react-icons/fa";
-import { customer_column, data } from "@/lib/constants/customersData";
+import { customer_column } from "@/lib/constants/customersData";
 import useSWR from "swr";
 
 export default function Customers() {

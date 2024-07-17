@@ -5,6 +5,14 @@ import { useState, useEffect, useCallback } from "react";
 const useCookies = () => {
   const [cookies, setCookiesState] = useState({});
 
+  const getAllCookies = useCallback(() => {
+    const cookies = {};
+    document.cookie.split(";").forEach((cookie) => {
+      const [name, value] = cookie.split("=").map((c) => c.trim());
+      cookies[name] = value;
+    });
+    return cookies;
+  }, []);
   const setCookie = useCallback((name, value, options = {}) => {
     const { days = 7, path = "/" } = options;
     let expires = "";
@@ -18,7 +26,7 @@ const useCookies = () => {
       document.cookie = `${name}=${value || ""}${expires}; path=${path}`;
     }
     setCookiesState(getAllCookies());
-  }, []);
+  }, [getAllCookies]);
 
   const getCookie = useCallback((name) => {
     const nameEQ = `${name}=`;
@@ -37,16 +45,9 @@ const useCookies = () => {
   const removeCookie = useCallback((name, path = "/") => {
     document.cookie = `${name}=; Max-Age=-99999999; path=${path}`;
     setCookiesState(getAllCookies());
-  }, []);
+  }, [getAllCookies]);
 
-  const getAllCookies = useCallback(() => {
-    const cookies = {};
-    document.cookie.split(";").forEach((cookie) => {
-      const [name, value] = cookie.split("=").map((c) => c.trim());
-      cookies[name] = value;
-    });
-    return cookies;
-  }, []);
+
 
   useEffect(() => {
     setCookiesState(getAllCookies());

@@ -19,12 +19,12 @@ export default function DashboardLayout({ children, ...props }) {
       <TopNav />
       <div className="flex flex-1 overflow-hidden">
         <SideNav className="flex-none shadow-lg w-full md:w-64 p-4" />
-        <section
+        <div
           className="flex-grow h-full md:px-8 px-2 overflow-x-hidden"
           {...props}
         >
           {children}
-        </section>
+        </div>
       </div>
     </main>
   );

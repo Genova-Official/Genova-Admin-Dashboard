@@ -30,7 +30,7 @@ const CustomerDetails = () => {
         />
       ),
     },
-    { label: "Profile Information", content: <ProfileComponent /> },
+    { label: "Profile Information", content: <ProfileComponent customer={customer_details?.user_information} /> },
   ];
   return (
     <div className="mt-8 xl:p-4  mb-[100px] xl:mb-0  p-1  bg-white ">
