@@ -5,7 +5,7 @@ import Typography from "@/components/reusables/typography/Typography";
 import React from "react";
 import { FaFilter, FaUser, } from "react-icons/fa";
 import { BsBoxArrowInDownRight, BsBoxArrowUpRight, BsPersonFill } from "react-icons/bs";
-import { columns, data } from "@/lib/constants/dashboardData";
+import { columns } from "@/lib/constants/dashboardData";
 import useSWR from "swr";
 
 export default function Dashboard() {

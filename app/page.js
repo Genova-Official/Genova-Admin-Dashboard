@@ -50,7 +50,14 @@ export default function Login() {
       setCookie("gen_token", response?.data?.data?.access_token, { days: 7 });
       router.push("/dashboard");
     }
-  }, [response?.data, setCookie, router]);
+    else{
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 5000,
+        progress: false,
+      });
+    }
+  }, [response?.data, setCookie,error, router]);
   return (
     <section className="bg-[#EEEEEE] h-screen flex items-center justify-center">
       <div className="max-w-lg w-full ">

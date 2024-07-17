@@ -16,6 +16,7 @@ const InputComponent = forwardRef(
       borderStyle = 'full',
       register,
       name,
+      defaultValue
     },
     ref
   ) => {
@@ -58,6 +59,7 @@ const InputComponent = forwardRef(
           >
             <input
               ref={ref}
+              defaultValue={defaultValue}
               className={baseInputClass}
               type={passwordType}
               placeholder={placeholder}
@@ -82,6 +84,7 @@ InputComponent.propTypes = {
   disabled: PropTypes.bool,
   password: PropTypes.bool,
   label: PropTypes.string,
+  defaultValue: PropTypes.string,
   labelColor: PropTypes.string,
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   register: PropTypes.func.isRequired,

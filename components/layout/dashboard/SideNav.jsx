@@ -11,6 +11,7 @@ import { RiUserSettingsLine } from "react-icons/ri";
 import Support from "@/components/icons/Support";
 import Logout from "@/components/icons/Logout";
 import BottomNav from "./BottomNav";
+import useCustomLogout from "@/hooks/useCustomLogout";
 
 const iconMap = {
   home: RxDashboard,
@@ -26,6 +27,7 @@ export default function SideNav({ ...props }) {
   const [activeItem, setActiveItem] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const customLogout = useCustomLogout();
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -88,6 +90,7 @@ export default function SideNav({ ...props }) {
         </button>
       </div>
       <span
+      onClick={customLogout}
         className={`py-3 mb-7 flex items-center gap-5 cursor-pointer font-poppins text-black hover:text-accent transition-all duration-200 hover:scale-95 ${
           isExpanded ? "justify-start" : "justify-center"
         }`}

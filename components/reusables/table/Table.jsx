@@ -19,12 +19,12 @@ const Table = ({ columns, data, onRowClick, isLoading }) => {
     <tr
       onClick={() => onRowClick && onRowClick(rowData)}
       key={`row-${i}`}
-      className={`text-left text-sm font-Poppins text-accent cursor-pointer ${
+      className={`text-left text-sm font-Poppins  cursor-pointer ${
         rowData.status.toLowerCase() === "successful" || rowData.status.toLowerCase() === "active"
-          ? "hover:bg-green/30"
-          : rowData.status.toLowerCase() === "Failed" || rowData.status.toLowerCase() === "inactive"
-          ? "hover:bg-red/30"
-          : "hover:bg-[#F7CB73]/20"
+          ? "hover:bg-green/30 "
+          : rowData.status.toLowerCase() === "failed" || rowData.status.toLowerCase() === "inactive"
+          ? "hover:bg-red/30 "
+          : "hover:bg-[#F7CB73]/20 "
       }`}
     >
       {columns.map(({ render }, id) => (
