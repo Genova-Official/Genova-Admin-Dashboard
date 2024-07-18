@@ -12,12 +12,21 @@ import ProfileComponent from "@/components/pages/ProfileComponent";
 import useSWR from "swr";
 import useFormattedPrice from "@/hooks/useFormattedPrice";
 
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric'
+  });
+};
 const CustomerDetails = () => {
   const { id } = useParams();
   const {data: customer_details} = useSWR(`/adminapp/user-information/${id}`)
   const {data: customer_transaction} = useSWR(`/adminapp/user-transaction/${id}`)
   const {data: customer_detail} = useSWR(`/user/${id}`)
-  console.log(customer_details)
+  console.log('customer_details.created_at:', customer_details);
+  console.log('customer_details.created_at:', customer_detail?.user_information?.created_at);
 
   const formattedPrice = useFormattedPrice(customer_details?.wallet_balance, "NGN")
   const tabs = [
@@ -75,9 +84,9 @@ const CustomerDetails = () => {
               {customer_detail?.last_name}
             </Typography>
             <Typography size="sm">{customer_detail?.email}</Typography>
-            {/* <Typography className="text-accent" size="sm">
-              User since 08/08/2007
-            </Typography> */}
+            <Typography className="text-accent" size="sm">
+            User since {customer_details?.user_information?.created_at ? formatDate(customer_details?.user_information?.created_at) : 'N/A'}
+            </Typography>
           </div>
         </div>
       </div>
