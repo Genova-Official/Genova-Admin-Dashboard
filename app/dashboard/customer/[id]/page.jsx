@@ -25,8 +25,6 @@ const CustomerDetails = () => {
   const {data: customer_details} = useSWR(`/adminapp/user-information/${id}`)
   const {data: customer_transaction} = useSWR(`/adminapp/user-transaction/${id}`)
   const {data: customer_detail} = useSWR(`/user/${id}`)
-  console.log('customer_details.created_at:', customer_details);
-  console.log('customer_details.created_at:', customer_detail?.user_information?.created_at);
 
   const formattedPrice = useFormattedPrice(customer_details?.wallet_balance, "NGN")
   const tabs = [
