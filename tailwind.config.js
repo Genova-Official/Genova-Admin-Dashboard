@@ -67,4 +67,6 @@ module.exports = {
       };
       addUtilities(newUtilities, ['responsive', 'hover']);
     },
-  ],};
+  ],
+
+};
