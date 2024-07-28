@@ -1,7 +1,6 @@
 "use client"
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconContext } from 'react-icons';
 import useFormattedPrice from '@/hooks/useFormattedPrice';
 
 const DashboardCard = ({ icon, title, value, isAmount }) => {

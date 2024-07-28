@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-const useFormattedPrice = (price,  currency = 'USD') => {
+const useFormattedPrice = (price,  currency = 'NGN') => {
   const formattedPrice = useMemo(() => {
     if (price !== undefined && price !== null) {
       return new Intl.NumberFormat('en-US', {
