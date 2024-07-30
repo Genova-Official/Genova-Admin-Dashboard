@@ -24,12 +24,14 @@ export default function Transactions() {
           <DashboardCard
             icon={<BsBoxArrowInDownRight />}
             title="Total Inflow"
-            value="11,000"
+            isAmount
+            value={dashboard?.total_inflow ?? 0}
           />
           <DashboardCard
             icon={<BsBoxArrowUpRight />}
             title="Total Outflow"
-            value="11,000"
+            isAmount
+            value={dashboard?.total_outflow ?? 0}
           />
         </div>
       </div>

@@ -28,7 +28,7 @@ export default function init() {
   axios.interceptors.response.use(
     (response) => response,
     async (error) => {
-      if (error.response.status === 401) {
+      if (error?.response?.status === 401) {
         removeCookies(["gen_token"]);
         window.location.href = '/'; // Redirect to the home page
       }

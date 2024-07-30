@@ -49,6 +49,7 @@ export default function Login() {
       });
       setCookie("gen_token", response?.data?.data?.access_token, { days: 7 });
       router.push("/dashboard");
+      window.location.reload()
     }
     else{
       toast.error(error, {
