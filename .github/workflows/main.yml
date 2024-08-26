@@ -1,37 +1,17 @@
-name: Node.js and Next.js CI/CD for genova
+name: Deploy to AWS
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x] # Adjust the Node.js version as needed
-
+  deploy:
+    runs-on: self-hosted
     steps:
-    - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    # Setup Node.js environment
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-
-    # Install dependencies
-    - name: Install dependencies
-      run: npm install
-
-    # Run ESLint
-    - name: Run ESLint
-      run: npm run lint
-
-    # Build the project
-    - name: Build frontend
-      run: npm run build # Adjust the build command as needed
+      - run: |
+          git pull origin main
+          docker compose up --build -d
