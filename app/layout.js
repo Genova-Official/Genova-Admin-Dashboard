@@ -51,12 +51,7 @@ export const metadata = {
       },
     ],
   },
-  // google: [
-  //   {
-  //     title: "google-site-verification",
-  //     description: "TkItxYzOdI4lusVFpTVojx796IpOyAT3T9K5ki_lh0A",
-  //   },
-  // ],
+
 };
 export default function RootLayout({ children }) {
   return (
