@@ -5,8 +5,58 @@ import ConfigLayout from "./ConfigLayout";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Genova web app",
-  description: "Join us at Genova",
+  title: "Genova",
+  description: "Welcome to Genova",
+  openGraph: {
+    title: "Genova",
+    description: "Genova",
+    url: "https://genova.com.ng",
+    siteName: "Genova",
+    images: [
+      {
+        url: "https://genova.com.ng/og-image.png",
+        width: 800,
+        height: 600,
+        alt: "Genova OpenGraph Image",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  icons: {
+    icon: "/genova.jpg",
+    apple: "/apple-touch-icon.png",
+    other: [
+      {
+        rel: "icon",
+        url: "/genova.jpg",
+        sizes: "32x32",
+      },
+      {
+        rel: "icon",
+        url: "/genova.jpg",
+        sizes: "16x16",
+      },
+      {
+        rel: "manifest",
+        url: "/site.webmanifest",
+      },
+      {
+        rel: "mask-icon",
+        url: "/safari-pinned-tab.svg",
+        color: "#5bbad5",
+      },
+    ],
+  },
+  // google: [
+  //   {
+  //     title: "google-site-verification",
+  //     description: "TkItxYzOdI4lusVFpTVojx796IpOyAT3T9K5ki_lh0A",
+  //   },
+  // ],
 };
 export default function RootLayout({ children }) {
   return (
