@@ -36,7 +36,6 @@ export default function Login() {
   const { postData, response, error, loading } = useCrud("/adminapp/login/");
 
   const onSubmit = async (data) => {
-    console.group(data);
     await postData(data);
   };
 
@@ -49,7 +48,6 @@ export default function Login() {
       });
       setCookie("gen_token", response?.data?.data?.access_token, { days: 7 });
       router.push("/dashboard");
-      // window.location.reload()
     }
     else{
       toast.error(error, {
