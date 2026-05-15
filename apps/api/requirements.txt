@@ -1,0 +1,13 @@
+Django==5.2.3
+djangorestframework==3.16.0
+djangorestframework_simplejwt==5.5.1
+django-cors-headers==4.7.0
+django-otp==1.5.0
+django-two-factor-auth==1.17.0
+psycopg2-binary==2.9.10
+python-decouple==3.8
+requests==2.32.4
+django-filter==25.1
+drf-spectacular==0.28.0
+whitenoise==6.11.0
+dj-database-url==3.1.2

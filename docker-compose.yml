@@ -1,16 +1,17 @@
 version: '3.8'
 
 services:
-  web:
+  console-web:
     build:
-      context: .
+      context: ./apps/web
       dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/console}
     ports:
-      - "4000:3000"
+      - "3000:3000"
     environment:
-      NODE_ENV: production
-    volumes:
-      - .:/app
-      - /app/.next
-      - /app/node_modules
-    command: npm run start
+      - NODE_ENV=production
+    restart: always
+
+# Note: The main Genova backend is assumed to be running separately 
+# as per the instruction to keep it as the primary source of truth.
