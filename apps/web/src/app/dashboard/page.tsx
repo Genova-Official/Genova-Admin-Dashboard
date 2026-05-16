@@ -93,9 +93,9 @@ export default function OverviewPage() {
       <div className="flex items-end justify-between">
         <div>
           <h1 className="text-4xl font-black text-foreground tracking-tight">Command Center</h1>
-          <p className="text-secondary font-semibold text-sm uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
+          <div className="text-secondary font-semibold text-sm uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
             <Globe size={14} className="text-primary" /> Global Platform Oversight
-          </p>
+          </div>
         </div>
         
         <div className="flex items-center gap-4">

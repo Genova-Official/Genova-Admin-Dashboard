@@ -57,14 +57,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const pathname = usePathname();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     if (!useAuthStore.getState().token) {
       router.push('/login');
     }
   }, [router]);
 
-  if (!user) return null;
+  if (!mounted || !user) return null;
 
   return (
     <div className="min-h-screen bg-background flex flex-col selection:bg-primary selection:text-white">

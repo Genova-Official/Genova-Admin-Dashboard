@@ -35,28 +35,28 @@
 }
 
 :root {
-  --background: #ffffff;
+  --background: #F8F7FD; /* Soft Lavender Grey */
   --foreground: #0f172a;
   --primary: #610B63;
   --secondary: #64748b;
-  --accent: #f1f5f9;
-  --border: #e2e8f0;
-  --sidebar: #f8fafc;
+  --accent: #efedfd; /* Soft Lavender Accent */
+  --border: #e2e1f0;
+  --sidebar: #f2f1f9;
   --card: #ffffff;
   --ring: rgba(97, 11, 99, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #020617;
-    --foreground: #f8fafc;
-    --primary: #8b5cf6;
-    --secondary: #94a3b8;
-    --accent: #1e293b;
-    --border: #1e293b;
-    --sidebar: #0f172a;
-    --card: #0f172a;
-    --ring: rgba(139, 92, 246, 0.2);
+    --background: #F8F7FD; /* Force bright theme even in dark mode for now as requested */
+    --foreground: #0f172a;
+    --primary: #610B63;
+    --secondary: #64748b;
+    --accent: #efedfd;
+    --border: #e2e1f0;
+    --sidebar: #f2f1f9;
+    --card: #ffffff;
+    --ring: rgba(97, 11, 99, 0.1);
   }
 }
 
