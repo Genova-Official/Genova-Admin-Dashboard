@@ -3,15 +3,23 @@ import { query } from '../../db';
 
 export async function GET(request: NextRequest) {
   try {
-    // 1. Business Count
-    const bizRes = await query('SELECT COUNT(DISTINCT business_admin_id) as count FROM "Account_location"');
+    // 1. Business Count — use Profile_business as source of truth
+    const bizRes = await query('SELECT COUNT(*) as count FROM "Profile_business"');
     const total_businesses = parseInt(bizRes.rows[0]?.count || '0', 10);
 
-    // 2. Active Businesses Today
-    const activeTodayRes = await query('SELECT COUNT(DISTINCT owner_id) as count FROM "Sales_sales" WHERE created_at::date = CURRENT_DATE');
-    const active_today = parseInt(activeTodayRes.rows[0]?.count || '0', 10);
+    // 2. Active Businesses — businesses with any sales in the last 30 days
+    const activeBizRes = await query(
+      `SELECT COUNT(DISTINCT pb.user_id) as count
+       FROM "Profile_business" pb
+       WHERE EXISTS (
+         SELECT 1 FROM "Sales_sales" ss
+         WHERE ss.owner_id = pb.user_id
+         AND ss.created_at >= NOW() - INTERVAL '30 days'
+       )`
+    );
+    const active_businesses = parseInt(activeBizRes.rows[0]?.count || '0', 10);
 
-    // 3. Staff Count
+    // 3. Staff Count — users who are staff members under a business owner
     const staffRes = await query('SELECT COUNT(*) as count FROM "Account_user" WHERE created_by_id IS NOT NULL');
     const staff_count = parseInt(staffRes.rows[0]?.count || '0', 10);
 
@@ -47,8 +55,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       businesses: {
         total: total_businesses,
-        active: active_today,
-        inactive: Math.max(0, total_businesses - active_today),
+        active: active_businesses,
+        inactive: Math.max(0, total_businesses - active_businesses),
       },
       staff: {
         total: staff_count,

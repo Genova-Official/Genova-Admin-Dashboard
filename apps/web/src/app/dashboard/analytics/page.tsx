@@ -9,7 +9,10 @@ import {
   Filter,
   Download,
   BarChart3,
-  Calendar
+  Calendar,
+  Crown,
+  Building2,
+  Sparkles
 } from 'lucide-react';
 
 interface DailySale {
@@ -18,8 +21,27 @@ interface DailySale {
   count: number;
 }
 
+interface TopBusiness {
+  name: string;
+  email: string;
+  total_volume: number;
+  transaction_count: number;
+}
+
+interface MonthlySummary {
+  month: string;
+  revenue: number;
+  transactions: number;
+}
+
+interface AnalyticsData {
+  daily_sales: DailySale[];
+  top_businesses: TopBusiness[];
+  monthly_summary: MonthlySummary[];
+}
+
 export default function AnalyticsPage() {
-  const [data, setData] = useState<{ daily_sales: DailySale[]; top_businesses: any[] } | null>(null);
+  const [data, setData] = useState<AnalyticsData | null>(null);
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -200,6 +222,127 @@ export default function AnalyticsPage() {
                 <span className={`text-sm font-black ${item.alert ? 'text-orange-600' : 'text-primary'}`}>{item.value}</span>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Top Businesses & Monthly Summary */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Top Performing Businesses */}
+        <div className="premium-card p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h4 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <Crown className="text-amber-500" size={20} />
+                Top Performing Businesses
+              </h4>
+              <p className="text-xs text-secondary mt-1">Leading entities by sales volume</p>
+            </div>
+            <span className="text-[10px] font-black text-secondary/40 uppercase tracking-widest">
+              Top 5 Leaders
+            </span>
+          </div>
+
+          <div className="space-y-4">
+            {data?.top_businesses && data.top_businesses.length > 0 ? (
+              data.top_businesses.map((biz, i) => {
+                const maxVolume = Math.max(...data.top_businesses.map(b => b.total_volume), 1);
+                const pct = Math.round((biz.total_volume / maxVolume) * 100);
+                return (
+                  <motion.div
+                    key={biz.email}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    className="p-4 rounded-xl border border-border bg-accent/20 hover:border-primary/20 transition-all flex flex-col gap-2"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-primary/5 text-primary flex items-center justify-center font-bold text-xs">
+                          {i + 1}
+                        </div>
+                        <div>
+                          <p className="font-bold text-foreground text-sm">{biz.name || 'Unnamed Business'}</p>
+                          <p className="text-[10px] text-secondary/60">{biz.email}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-black text-foreground">{formatCurrency(biz.total_volume)}</p>
+                        <p className="text-[10px] text-secondary/60">{biz.transaction_count} txns</p>
+                      </div>
+                    </div>
+                    <div className="h-1.5 w-full bg-accent rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-primary rounded-full transition-all" 
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </motion.div>
+                );
+              })
+            ) : (
+              <div className="py-12 text-center text-secondary/40">
+                <Building2 size={36} className="mx-auto mb-2 opacity-50" />
+                <p className="text-xs font-bold uppercase tracking-wider">No Business Activity Recorded</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Monthly Revenue Trend */}
+        <div className="premium-card p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h4 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <Sparkles className="text-primary" size={20} />
+                Monthly Revenue Trend
+              </h4>
+              <p className="text-xs text-secondary mt-1">Financial summary over the last 6 months</p>
+            </div>
+            <span className="text-[10px] font-black text-secondary/40 uppercase tracking-widest">
+              Macro Trends
+            </span>
+          </div>
+
+          <div className="space-y-4">
+            {data?.monthly_summary && data.monthly_summary.length > 0 ? (
+              data.monthly_summary.map((month, i) => {
+                const maxRevenue = Math.max(...data.monthly_summary.map(m => m.revenue), 1);
+                const pct = Math.round((month.revenue / maxRevenue) * 100);
+                return (
+                  <motion.div
+                    key={month.month}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    className="p-4 rounded-xl border border-border bg-accent/20 hover:border-primary/20 transition-all flex items-center justify-between gap-4"
+                  >
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className="w-20 text-xs font-black text-secondary uppercase tracking-wider">
+                        {month.month}
+                      </div>
+                      <div className="flex-1 hidden sm:block">
+                        <div className="h-2 w-full bg-accent rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-purple-500 rounded-full transition-all" 
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-black text-foreground">{formatCurrency(month.revenue)}</p>
+                      <p className="text-[10px] text-secondary/60">{month.transactions} transactions</p>
+                    </div>
+                  </motion.div>
+                );
+              })
+            ) : (
+              <div className="py-12 text-center text-secondary/40">
+                <Calendar size={36} className="mx-auto mb-2 opacity-50" />
+                <p className="text-xs font-bold uppercase tracking-wider">No Monthly Summary Available</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
