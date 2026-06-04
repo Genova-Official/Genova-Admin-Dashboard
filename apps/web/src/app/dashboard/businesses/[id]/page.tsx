@@ -104,6 +104,32 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
     }).format(val || 0).replace('NGN', '₦');
   };
 
+  const getRelativeTimeString = (dateString: string | null) => {
+    if (!dateString) return 'Never';
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    
+    if (isNaN(diffMs)) return 'Never';
+    
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHr = Math.floor(diffMin / 60);
+    const diffDays = Math.floor(diffHr / 24);
+    
+    if (diffSec < 60) {
+      return 'Just now';
+    } else if (diffMin < 60) {
+      return `${diffMin}m ago`;
+    } else if (diffHr < 24) {
+      return `${diffHr}h ago`;
+    } else if (diffDays < 30) {
+      return `${diffDays}d ago`;
+    } else {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+  };
+
   if (loading) return (
     <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
       <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -210,8 +236,10 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
                   <Clock size={16} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-secondary/40 uppercase">Last Synchronization</p>
-                  <p className="text-xs font-bold text-foreground">{data.last_login ? new Date(data.last_login).toLocaleString() : 'Never'}</p>
+                  <p className="text-[10px] font-bold text-secondary/40 uppercase">Last Active on Platform</p>
+                  <p className="text-xs font-bold text-foreground cursor-help" title={data.last_login ? new Date(data.last_login).toLocaleString() : 'Never'}>
+                    {getRelativeTimeString(data.last_login)}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -398,7 +426,9 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
                           {s.user_status.toUpperCase()}
                         </span>
                       </td>
-                      <td className="text-secondary text-xs font-medium">{s.last_login ? new Date(s.last_login).toLocaleString() : 'Never'}</td>
+                      <td className="text-secondary text-xs font-medium cursor-help" title={s.last_login ? new Date(s.last_login).toLocaleString() : 'Never'}>
+                        {getRelativeTimeString(s.last_login)}
+                      </td>
                       <td className="text-right">
                          <button className="p-2 text-secondary hover:text-primary transition-all">
                           <MoreVertical size={18} />
