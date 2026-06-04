@@ -22,7 +22,8 @@ import {
   Clock,
   Briefcase,
   Zap,
-  MoreVertical
+  MoreVertical,
+  X
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -51,6 +52,22 @@ interface BusinessDetail {
     user_status: string;
     last_login: string;
   }[];
+  recent_items: {
+    id: number;
+    product_name: string;
+    quantity: number;
+    cost_price: number;
+    selling_price: number;
+    created_at: string;
+  }[];
+  recent_sales: {
+    id: number;
+    total_price: number;
+    payment_method: string;
+    payment_status: string;
+    created_at: string;
+    payer_name: string;
+  }[];
   stats: {
     sales: {
       total_volume: number;
@@ -70,6 +87,7 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
   const [data, setData] = useState<BusinessDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'branches' | 'staff' | 'financials'>('overview');
+  const [activeModal, setActiveModal] = useState<'inventory' | 'branches' | 'sales' | null>(null);
 
   useEffect(() => {
     api.get(`/businesses/${id}/`)
@@ -269,6 +287,7 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
                 value={formatCurrency(data.stats.inventory.total_value)}
                 icon={Package}
                 color="blue"
+                onClick={() => setActiveModal('inventory')}
               />
               <OverviewInsightCard 
                 label="Infrastructure Scale" 
@@ -277,6 +296,7 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
                 value="Enterprise Grade"
                 icon={MapPin}
                 color="purple"
+                onClick={() => setActiveModal('branches')}
               />
               <OverviewInsightCard 
                 label="Transaction Velocity" 
@@ -285,6 +305,7 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
                 value={formatCurrency(data.stats.sales.total_volume / (data.stats.sales.total_count || 1))}
                 icon={CreditCard}
                 color="green"
+                onClick={() => setActiveModal('sales')}
               />
             </motion.div>
           )}
@@ -391,13 +412,200 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
           )}
         </AnimatePresence>
       </div>
+
+      {/* Popups / Modals */}
+      <AnimatePresence>
+        {activeModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setActiveModal(null)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            />
+
+            {/* Content */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.4 }}
+              className="bg-card border border-border w-full max-w-2xl rounded-2xl shadow-2xl relative z-10 flex flex-col max-h-[85vh] overflow-hidden"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-border">
+                <div>
+                  <h3 className="text-xl font-black text-foreground">
+                    {activeModal === 'inventory' && 'Inventory Portfolio Snapshot'}
+                    {activeModal === 'branches' && 'Corporate Infrastructure Scale'}
+                    {activeModal === 'sales' && 'Recent Transaction Velocity'}
+                  </h3>
+                  <p className="text-xs text-secondary mt-1">
+                    {activeModal === 'inventory' && 'Previewing up to 10 latest product lines'}
+                    {activeModal === 'branches' && 'All registered operational branch locations'}
+                    {activeModal === 'sales' && 'Recent 10 completed platform transactions'}
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setActiveModal(null)}
+                  className="p-2 rounded-lg text-secondary hover:text-foreground hover:bg-accent/50 transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
+                {activeModal === 'inventory' && (
+                  <div className="overflow-x-auto">
+                    <table className="premium-table">
+                      <thead>
+                        <tr>
+                          <th>Product Name</th>
+                          <th>Quantity</th>
+                          <th>Cost Price</th>
+                          <th>Selling Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data?.recent_items && data.recent_items.length > 0 ? (
+                          data.recent_items.map((item) => (
+                            <tr key={item.id} className="hover:bg-accent/30 transition-colors">
+                              <td className="font-bold text-foreground py-3.5">{item.product_name}</td>
+                              <td className="font-mono text-secondary py-3.5">{item.quantity.toLocaleString()}</td>
+                              <td className="font-mono text-secondary py-3.5">{formatCurrency(item.cost_price)}</td>
+                              <td className="font-mono text-foreground font-bold py-3.5">{formatCurrency(item.selling_price)}</td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan={4} className="py-12 text-center text-secondary/40 font-bold uppercase tracking-wider text-xs">
+                              No Inventory Items Found
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {activeModal === 'branches' && (
+                  <div className="overflow-x-auto">
+                    <table className="premium-table">
+                      <thead>
+                        <tr>
+                          <th>Branch Name</th>
+                          <th>Status</th>
+                          <th>Location Type</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data?.locations && data.locations.length > 0 ? (
+                          data.locations.map((loc) => (
+                            <tr key={loc.id} className="hover:bg-accent/30 transition-colors">
+                              <td className="font-bold text-foreground py-3.5">
+                                <div className="flex items-center gap-2">
+                                  <span>{loc.location_name}</span>
+                                  {loc.is_main_location && (
+                                    <span className="text-[8px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-bold">HQ</span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="py-3.5">
+                                <span className={`premium-status ${loc.status === 'Active' ? 'status-active' : 'status-inactive'}`}>
+                                  {loc.status.toUpperCase()}
+                                </span>
+                              </td>
+                              <td className="text-secondary/50 text-[10px] font-black uppercase tracking-widest py-3.5">
+                                {loc.is_main_location ? 'Operational HQ' : 'Satellite Branch'}
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan={3} className="py-12 text-center text-secondary/40 font-bold uppercase tracking-wider text-xs">
+                              No Branch Locations Registered
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {activeModal === 'sales' && (
+                  <div className="overflow-x-auto">
+                    <table className="premium-table">
+                      <thead>
+                        <tr>
+                          <th>Transaction ID</th>
+                          <th>Payer / Customer</th>
+                          <th>Amount</th>
+                          <th>Status</th>
+                          <th>Timestamp</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data?.recent_sales && data.recent_sales.length > 0 ? (
+                          data.recent_sales.map((sale) => (
+                            <tr key={sale.id} className="hover:bg-accent/30 transition-colors">
+                              <td className="font-mono text-[10px] text-secondary py-3.5">TXN-{sale.id}</td>
+                              <td className="font-bold text-foreground py-3.5">{sale.payer_name}</td>
+                              <td className="font-mono text-foreground font-black py-3.5">{formatCurrency(sale.total_price)}</td>
+                              <td className="py-3.5">
+                                <span className={`premium-status ${
+                                  sale.payment_status === 'Paid' || sale.payment_status === 'Successful'
+                                    ? 'status-active' 
+                                    : sale.payment_status === 'Pending' 
+                                      ? 'status-pending' 
+                                      : 'status-inactive'
+                                }`}>
+                                  {sale.payment_status.toUpperCase()}
+                                </span>
+                              </td>
+                              <td className="text-secondary text-xs py-3.5">
+                                {new Date(sale.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan={5} className="py-12 text-center text-secondary/40 font-bold uppercase tracking-wider text-xs">
+                              No Recent Sales Logged
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+              
+              {/* Footer */}
+              <div className="p-6 border-t border-border bg-accent/20 flex justify-end">
+                <button 
+                  onClick={() => setActiveModal(null)}
+                  className="px-5 py-2.5 bg-background border border-border rounded-xl text-xs font-bold text-secondary hover:text-foreground transition-all"
+                >
+                  Dismiss Interface
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-function OverviewInsightCard({ label, title, subTitle, value, icon: Icon, color }: any) {
+function OverviewInsightCard({ label, title, subTitle, value, icon: Icon, color, onClick }: any) {
   return (
-    <div className="premium-card p-8 flex flex-col gap-6 group hover:border-primary/20 transition-all">
+    <div 
+      onClick={onClick}
+      className="premium-card p-8 flex flex-col gap-6 group hover:border-primary/20 transition-all cursor-pointer"
+    >
       <div className="flex justify-between items-start">
         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 ${
           color === 'blue' ? 'bg-blue-500/10 text-blue-600' :

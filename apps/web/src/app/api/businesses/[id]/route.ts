@@ -76,7 +76,27 @@ export async function GET(
     const total_value = parseFloat(invRes.rows[0]?.value || '0');
     const unique_products = parseInt(invRes.rows[0]?.products || '0', 10);
 
-    // 6. Respond with formatted payload
+    // 6. Fetch first 10 inventory items
+    const recentItemsRes = await query(
+      `SELECT id, product_name, quantity, cost_price, selling_price, created_at
+       FROM "Inventory_inventory"
+       WHERE owner_id = $1
+       ORDER BY created_at DESC
+       LIMIT 10`,
+      [ownerUserId]
+    );
+
+    // 7. Fetch recent 10 sales
+    const recentSalesRes = await query(
+      `SELECT id, total_price, payment_method, payment_status, created_at, payer_name
+       FROM "Sales_sales"
+       WHERE owner_id = $1
+       ORDER BY created_at DESC
+       LIMIT 10`,
+      [ownerUserId]
+    );
+
+    // 8. Respond with formatted payload
     return NextResponse.json({
       id: ownerUserId,
       email: owner.email,
@@ -101,6 +121,22 @@ export async function GET(
         name: s.name || 'Unnamed Staff',
         user_status: s.user_status || 'Active',
         last_login: s.last_login,
+      })),
+      recent_items: recentItemsRes.rows.map((item: any) => ({
+        id: item.id,
+        product_name: item.product_name || 'Unnamed Product',
+        quantity: parseInt(item.quantity || '0', 10),
+        cost_price: parseFloat(item.cost_price || '0'),
+        selling_price: parseFloat(item.selling_price || '0'),
+        created_at: item.created_at,
+      })),
+      recent_sales: recentSalesRes.rows.map((sale: any) => ({
+        id: sale.id,
+        total_price: parseFloat(sale.total_price || '0'),
+        payment_method: sale.payment_method || 'Cash',
+        payment_status: sale.payment_status || 'Paid',
+        created_at: sale.created_at,
+        payer_name: sale.payer_name || 'Walk-in Customer',
       })),
       stats: {
         sales: {
