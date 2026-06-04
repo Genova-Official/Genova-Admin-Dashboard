@@ -35,33 +35,33 @@
 }
 
 :root {
-  --background: #FAF9FC; /* Soft Premium Lavender */
-  --foreground: #1A0D22; /* Deep Plum Black (soft high-end contrast) */
+  --background: #ECE9F6; /* Premium Lavender */
+  --foreground: #1E0F2B; /* Deep Purple Plum Black */
   --primary: #610B63;
-  --secondary: #706B85; /* Elegant lavender-grey secondary */
-  --accent: #EAE6F4; /* Richer Premium Lavender Accent */
-  --border: #E4DFEE; /* Soft matching border color */
-  --sidebar: #F3F0F8; /* Premium sidebar background */
-  --card: #FEFCF9; /* Vibrant Warm Cream Card for premium contrast */
+  --secondary: #6E6983; /* Lavender-grey secondary */
+  --accent: #F5F3FC; /* Light lavender accent */
+  --border: #E3DFF2; /* Purple-lavender border */
+  --sidebar: #F1EEF9; /* Sidebar background (light lavender) */
+  --card: #FFFFFF; /* Clean white cards for contrast */
   --ring: rgba(97, 11, 99, 0.15);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #FAF9FC; /* Force bright premium lavender-cream even in system dark mode */
-    --foreground: #1A0D22;
+    --background: #ECE9F6;
+    --foreground: #1E0F2B;
     --primary: #610B63;
-    --secondary: #706B85;
-    --accent: #EAE6F4;
-    --border: #E4DFEE;
-    --sidebar: #F3F0F8;
-    --card: #FEFCF9;
+    --secondary: #6E6983;
+    --accent: #F5F3FC;
+    --border: #E3DFF2;
+    --sidebar: #F1EEF9;
+    --card: #FFFFFF;
     --ring: rgba(97, 11, 99, 0.15);
   }
 }
 
 body {
-  background: radial-gradient(circle at 0% 0%, #FEFCF9 0%, #FAF9FC 100%);
+  background: radial-gradient(circle at 0% 0%, #FAF9FE 0%, #ECE9F6 100%);
   color: var(--foreground);
   font-family: var(--font-inter);
   -webkit-font-smoothing: antialiased;
