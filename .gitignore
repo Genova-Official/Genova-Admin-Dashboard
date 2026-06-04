@@ -46,4 +46,4 @@ yarn-error.log*
 *.log
 
 # Docker
-.dockerignore
+
