@@ -102,118 +102,120 @@ export default function BusinessesPage() {
 
       {/* Businesses Table */}
       <div className="premium-card overflow-hidden">
-        <table className="premium-table">
-          <thead>
-            <tr>
-              <th>Business Entity</th>
-              <th>Infrastructure</th>
-              <th>Operational Status</th>
-              <th>Financial Volume</th>
-              <th>Onboarding</th>
-              <th className="text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <AnimatePresence mode="wait">
-              {loading ? (
-                <motion.tr 
-                  initial={{ opacity: 0 }} 
-                  animate={{ opacity: 1 }} 
-                  exit={{ opacity: 0 }}
-                >
-                  <td colSpan={6} className="py-32 text-center">
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                      <p className="text-xs font-bold text-secondary uppercase tracking-[0.2em]">Querying Registry...</p>
-                    </div>
-                  </td>
-                </motion.tr>
-              ) : businesses.length === 0 ? (
-                <motion.tr 
-                  initial={{ opacity: 0 }} 
-                  animate={{ opacity: 1 }} 
-                  exit={{ opacity: 0 }}
-                >
-                  <td colSpan={6} className="py-32 text-center">
-                    <div className="flex flex-col items-center gap-3 text-secondary/40">
-                      <Building2 size={48} strokeWidth={1} />
-                      <p className="font-bold uppercase tracking-widest text-sm">No Matching Entities Found</p>
-                    </div>
-                  </td>
-                </motion.tr>
-              ) : (
-                businesses.map((biz) => (
+        <div className="overflow-x-auto">
+          <table className="premium-table min-w-[760px]">
+            <thead>
+              <tr>
+                <th>Business Entity</th>
+                <th>Infrastructure</th>
+                <th>Operational Status</th>
+                <th>Financial Volume</th>
+                <th>Onboarding</th>
+                <th className="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <AnimatePresence mode="wait">
+                {loading ? (
                   <motion.tr 
-                    key={biz.id}
-                    layout
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="group hover:bg-accent/30 transition-colors cursor-pointer"
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }} 
+                    exit={{ opacity: 0 }}
                   >
-                    <td className="py-5">
-                      <Link href={`/dashboard/businesses/${biz.id}`} className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
-                          <Building2 size={20} />
-                        </div>
-                        <div>
-                          <p className="font-bold text-foreground group-hover:text-primary transition-colors">{biz.name}</p>
-                          <p className="text-[10px] font-medium text-secondary/60 uppercase tracking-tighter">{biz.email}</p>
-                        </div>
-                      </Link>
-                    </td>
-                    <td>
-                      <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2 text-xs font-bold text-foreground/80">
-                          <MapPin size={12} className="text-secondary/40" />
-                          <span>{biz.location_count} Branches</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs font-bold text-foreground/80">
-                          <Users2 size={12} className="text-secondary/40" />
-                          <span>{biz.staff_count} Staff Members</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span className={`premium-status ${
-                        biz.status === 'Active' ? 'status-active' : 'status-inactive'
-                      }`}>
-                        {biz.status.toUpperCase()}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="flex items-center gap-2 text-foreground font-black text-sm">
-                        <TrendingUp size={14} className="text-green-500" />
-                        {formatCurrency(biz.total_sales_volume)}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="text-secondary text-[10px] font-bold">
-                        {new Date(biz.created_at).toLocaleDateString('en-US', { 
-                          year: 'numeric', 
-                          month: 'short', 
-                          day: '2-digit' 
-                        })}
-                      </div>
-                    </td>
-                    <td className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Link 
-                          href={`/dashboard/businesses/${biz.id}`}
-                          className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-primary/5 transition-all"
-                        >
-                          <ExternalLink size={18} />
-                        </Link>
-                        <button className="p-2 rounded-lg text-secondary hover:text-foreground hover:bg-accent transition-all">
-                          <MoreHorizontal size={18} />
-                        </button>
+                    <td colSpan={6} className="py-32 text-center">
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                        <p className="text-xs font-bold text-secondary uppercase tracking-[0.2em]">Querying Registry...</p>
                       </div>
                     </td>
                   </motion.tr>
-                ))
-              )}
-            </AnimatePresence>
-          </tbody>
-        </table>
+                ) : businesses.length === 0 ? (
+                  <motion.tr 
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }} 
+                    exit={{ opacity: 0 }}
+                  >
+                    <td colSpan={6} className="py-32 text-center">
+                      <div className="flex flex-col items-center gap-3 text-secondary/40">
+                        <Building2 size={48} strokeWidth={1} />
+                        <p className="font-bold uppercase tracking-widest text-sm">No Matching Entities Found</p>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ) : (
+                  businesses.map((biz) => (
+                    <motion.tr 
+                      key={biz.id}
+                      layout
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="group hover:bg-accent/30 transition-colors cursor-pointer"
+                    >
+                      <td className="py-5">
+                        <Link href={`/dashboard/businesses/${biz.id}`} className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                            <Building2 size={20} />
+                          </div>
+                          <div>
+                            <p className="font-bold text-foreground group-hover:text-primary transition-colors">{biz.name}</p>
+                            <p className="text-[10px] font-medium text-secondary/60 uppercase tracking-tighter">{biz.email}</p>
+                          </div>
+                        </Link>
+                      </td>
+                      <td>
+                        <div className="flex flex-col gap-1.5">
+                          <div className="flex items-center gap-2 text-xs font-bold text-foreground/80">
+                            <MapPin size={12} className="text-secondary/40" />
+                            <span>{biz.location_count} Branches</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs font-bold text-foreground/80">
+                            <Users2 size={12} className="text-secondary/40" />
+                            <span>{biz.staff_count} Staff Members</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`premium-status ${
+                          biz.status === 'Active' ? 'status-active' : 'status-inactive'
+                        }`}>
+                          {biz.status.toUpperCase()}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="flex items-center gap-2 text-foreground font-black text-sm">
+                          <TrendingUp size={14} className="text-green-500" />
+                          {formatCurrency(biz.total_sales_volume)}
+                        </div>
+                      </td>
+                      <td>
+                        <div className="text-secondary text-[10px] font-bold">
+                          {new Date(biz.created_at).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: '2-digit' 
+                          })}
+                        </div>
+                      </td>
+                      <td className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Link 
+                            href={`/dashboard/businesses/${biz.id}`}
+                            className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-primary/5 transition-all"
+                          >
+                            <ExternalLink size={18} />
+                          </Link>
+                          <button className="p-2 rounded-lg text-secondary hover:text-foreground hover:bg-accent transition-all">
+                            <MoreHorizontal size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))
+                )}
+              </AnimatePresence>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Premium Pagination */}

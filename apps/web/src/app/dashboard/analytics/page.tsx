@@ -79,14 +79,14 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-10 animate-in fade-in duration-700 max-w-7xl">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl font-black text-foreground tracking-tight">Platform Analytics</h1>
           <p className="text-secondary font-semibold text-sm uppercase tracking-[0.2em] mt-1 flex items-center gap-2">
             <BarChart3 size={14} className="text-primary" /> Ecosystem Growth &amp; Trends
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 px-4 py-2 bg-background border border-border rounded-xl text-xs font-bold text-secondary">
             <Calendar size={14} /> Last 30 Days
           </div>
@@ -135,7 +135,7 @@ export default function AnalyticsPage() {
 
         {data?.daily_sales && data.daily_sales.length > 0 ? (
           <>
-            <div className="h-[280px] w-full flex items-end justify-between gap-1.5 px-2">
+            <div className="h-[280px] w-full flex items-end justify-between gap-0.5 sm:gap-1.5 px-2">
               {data.daily_sales.map((day, i) => {
                 const heightPct = maxTotal > 0 ? (Number(day.total) / maxTotal) * 100 : 0;
                 return (
@@ -256,17 +256,17 @@ export default function AnalyticsPage() {
                     transition={{ delay: i * 0.1 }}
                     className="p-4 rounded-xl border border-border bg-accent/20 hover:border-primary/20 transition-all flex flex-col gap-2"
                   >
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-primary/5 text-primary flex items-center justify-center font-bold text-xs">
+                    <div className="flex justify-between items-start gap-4">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-8 h-8 rounded-lg bg-primary/5 text-primary flex items-center justify-center font-bold text-xs shrink-0">
                           {i + 1}
                         </div>
-                        <div>
-                          <p className="font-bold text-foreground text-sm">{biz.name || 'Unnamed Business'}</p>
-                          <p className="text-[10px] text-secondary/60">{biz.email}</p>
+                        <div className="min-w-0">
+                          <p className="font-bold text-foreground text-sm truncate">{biz.name || 'Unnamed Business'}</p>
+                          <p className="text-[10px] text-secondary/60 truncate">{biz.email}</p>
                         </div>
                       </div>
-                      <div className="text-right">
+                      <div className="text-right shrink-0">
                         <p className="text-sm font-black text-foreground">{formatCurrency(biz.total_volume)}</p>
                         <p className="text-[10px] text-secondary/60">{biz.transaction_count} txns</p>
                       </div>

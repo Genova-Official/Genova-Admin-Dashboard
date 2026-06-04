@@ -153,54 +153,54 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
   );
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="space-y-8 animate-in fade-in duration-700">
       {/* Top Navigation & Status */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/dashboard/businesses" className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-secondary hover:text-primary transition-all">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex items-center gap-4">
+          <Link href="/dashboard/businesses" className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-secondary hover:text-primary transition-all flex-shrink-0">
             <ChevronLeft size={20} />
           </Link>
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-black text-foreground tracking-tight">{data.name}</h1>
-              <span className={`premium-status ${data.user_status === 'Active' ? 'status-active' : 'status-inactive'}`}>
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3">
+              <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight truncate">{data.name}</h1>
+              <span className={`premium-status flex-shrink-0 ${data.user_status === 'Active' ? 'status-active' : 'status-inactive'}`}>
                 {data.user_status.toUpperCase()}
               </span>
             </div>
-            <p className="text-secondary font-medium text-sm mt-1 flex items-center gap-2">
+            <p className="text-secondary font-medium text-xs md:text-sm mt-1 flex items-center gap-2 truncate">
               <ShieldCheck size={14} className={data.is_verified ? 'text-green-500' : 'text-secondary/40'} />
-              {data.email} • ID: GEN-{data.id}
+              <span className="truncate">{data.email} • ID: GEN-{data.id}</span>
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-accent/50 border border-border rounded-xl text-xs font-bold text-secondary hover:text-foreground transition-all">
-            <Activity size={14} /> View Live Metrics
+        <div className="flex items-center gap-2 sm:ml-auto flex-wrap">
+          <button className="flex items-center gap-2 px-3 md:px-4 py-2 bg-accent/50 border border-border rounded-xl text-xs font-bold text-secondary hover:text-foreground transition-all">
+            <Activity size={14} /> <span className="hidden sm:inline">View Live Metrics</span><span className="sm:hidden">Metrics</span>
           </button>
-          <button className="premium-button">
-            <Zap size={14} /> Operational Support
+          <button className="premium-button text-xs">
+            <Zap size={14} /> <span className="hidden sm:inline">Operational Support</span><span className="sm:hidden">Support</span>
           </button>
         </div>
       </div>
 
       {/* Strategic Overview Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         {/* Financial Strength Card */}
-        <div className="lg:col-span-2 premium-card p-8 bg-primary text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
+        <div className="lg:col-span-2 premium-card p-6 md:p-8 bg-primary text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-64 h-64 -mr-16 -mt-16 rounded-full bg-white/5 blur-3xl group-hover:bg-white/10 transition-colors"></div>
-          <div className="relative z-10 flex flex-col justify-between h-full space-y-8">
+          <div className="relative z-10 flex flex-col justify-between h-full space-y-6 md:space-y-8">
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em] mb-2">Total Sales Volume</p>
-                <h2 className="text-5xl font-black tracking-tight">{formatCurrency(data.stats.sales.total_volume)}</h2>
+                <h2 className="text-3xl md:text-5xl font-black tracking-tight">{formatCurrency(data.stats.sales.total_volume)}</h2>
               </div>
-              <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center">
-                <TrendingUp size={24} />
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center">
+                <TrendingUp size={22} />
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 border-t border-white/10 pt-8">
+            <div className="grid grid-cols-3 gap-3 md:gap-4 border-t border-white/10 pt-6 md:pt-8">
               <div>
                 <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1">VAT Generated</p>
                 <p className="text-lg font-bold">{formatCurrency(data.stats.sales.total_vat)}</p>
@@ -272,13 +272,13 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
 
       {/* Tabs System */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-border">
-          <div className="flex gap-8">
+        <div className="flex items-start sm:items-center justify-between border-b border-border gap-2">
+          <div className="flex gap-4 md:gap-8 overflow-x-auto pb-0 -mb-px scrollbar-none">
             {['overview', 'branches', 'staff', 'financials'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as any)}
-                className={`pb-4 text-xs font-black uppercase tracking-[0.2em] transition-all relative ${
+                className={`pb-4 text-xs font-black uppercase tracking-[0.12em] md:tracking-[0.2em] transition-all relative whitespace-nowrap ${
                   activeTab === tab ? 'text-primary' : 'text-secondary hover:text-foreground'
                 }`}
               >
@@ -289,12 +289,12 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-2 mb-4 flex-shrink-0">
             <button className="p-2 rounded-xl bg-accent text-secondary hover:text-primary transition-all">
-              <Share2 size={18} />
+              <Share2 size={16} />
             </button>
             <button className="p-2 rounded-xl bg-accent text-secondary hover:text-primary transition-all">
-              <Filter size={18} />
+              <Filter size={16} />
             </button>
           </div>
         </div>
@@ -346,43 +346,45 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
               exit={{ opacity: 0, y: -10 }}
               className="premium-card overflow-hidden"
             >
-              <table className="premium-table">
-                <thead>
-                  <tr>
-                    <th>Branch Location</th>
-                    <th>Status</th>
-                    <th>Onboarding Date</th>
-                    <th>Type</th>
-                    <th className="text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.locations.map((loc) => (
-                    <tr key={loc.id} className="hover:bg-accent/30 transition-colors">
-                      <td className="font-bold text-foreground">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs ${loc.is_main_location ? 'bg-primary/10 text-primary' : 'bg-accent text-secondary'}`}>
-                            <MapPin size={14} />
-                          </div>
-                          <span>{loc.location_name} {loc.is_main_location && <span className="text-[8px] bg-primary/10 text-primary px-1.5 py-0.5 rounded ml-2">MAIN</span>}</span>
-                        </div>
-                      </td>
-                      <td>
-                        <span className={`premium-status ${loc.status === 'Active' ? 'status-active' : 'status-inactive'}`}>
-                          {loc.status.toUpperCase()}
-                        </span>
-                      </td>
-                      <td className="text-secondary text-xs font-medium">{new Date(loc.created_at).toLocaleDateString()}</td>
-                      <td className="text-secondary/50 text-[10px] font-black uppercase tracking-widest">{loc.is_main_location ? 'Operational HQ' : 'Satellite Branch'}</td>
-                      <td className="text-right">
-                        <button className="p-2 text-secondary hover:text-primary transition-all">
-                          <ArrowUpRight size={18} />
-                        </button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="premium-table min-w-[540px]">
+                  <thead>
+                    <tr>
+                      <th>Branch Location</th>
+                      <th>Status</th>
+                      <th>Onboarding Date</th>
+                      <th>Type</th>
+                      <th className="text-right">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {data.locations.map((loc) => (
+                      <tr key={loc.id} className="hover:bg-accent/30 transition-colors">
+                        <td className="font-bold text-foreground">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs flex-shrink-0 ${loc.is_main_location ? 'bg-primary/10 text-primary' : 'bg-accent text-secondary'}`}>
+                              <MapPin size={14} />
+                            </div>
+                            <span>{loc.location_name} {loc.is_main_location && <span className="text-[8px] bg-primary/10 text-primary px-1.5 py-0.5 rounded ml-2">MAIN</span>}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span className={`premium-status ${loc.status === 'Active' ? 'status-active' : 'status-inactive'}`}>
+                            {loc.status.toUpperCase()}
+                          </span>
+                        </td>
+                        <td className="text-secondary text-xs font-medium">{new Date(loc.created_at).toLocaleDateString()}</td>
+                        <td className="text-secondary/50 text-[10px] font-black uppercase tracking-widest">{loc.is_main_location ? 'Operational HQ' : 'Satellite Branch'}</td>
+                        <td className="text-right">
+                          <button className="p-2 text-secondary hover:text-primary transition-all">
+                            <ArrowUpRight size={18} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </motion.div>
           )}
 
@@ -394,50 +396,52 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
               exit={{ opacity: 0, y: -10 }}
               className="premium-card overflow-hidden"
             >
-              <table className="premium-table">
-                <thead>
-                  <tr>
-                    <th>Staff Member</th>
-                    <th>System Role</th>
-                    <th>Account Status</th>
-                    <th>Last Activity</th>
-                    <th className="text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.staff.map((s) => (
-                    <tr key={s.id} className="hover:bg-accent/30 transition-colors">
-                      <td className="py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center font-black text-xs text-secondary">
-                            {s.name.charAt(0)}
-                          </div>
-                          <div>
-                            <p className="font-bold text-foreground text-sm">{s.name}</p>
-                            <p className="text-[10px] text-secondary/60">{s.email}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <span className="text-[10px] font-black text-secondary uppercase tracking-widest">Operational User</span>
-                      </td>
-                      <td>
-                        <span className={`premium-status ${s.user_status === 'Active' ? 'status-active' : 'status-inactive'}`}>
-                          {s.user_status.toUpperCase()}
-                        </span>
-                      </td>
-                      <td className="text-secondary text-xs font-medium cursor-help" title={s.last_login ? new Date(s.last_login).toLocaleString() : 'Never'}>
-                        {getRelativeTimeString(s.last_login)}
-                      </td>
-                      <td className="text-right">
-                         <button className="p-2 text-secondary hover:text-primary transition-all">
-                          <MoreVertical size={18} />
-                        </button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="premium-table min-w-[520px]">
+                  <thead>
+                    <tr>
+                      <th>Staff Member</th>
+                      <th>System Role</th>
+                      <th>Account Status</th>
+                      <th>Last Activity</th>
+                      <th className="text-right">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {data.staff.map((s) => (
+                      <tr key={s.id} className="hover:bg-accent/30 transition-colors">
+                        <td className="py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center font-black text-xs text-secondary flex-shrink-0">
+                              {s.name.charAt(0)}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="font-bold text-foreground text-sm truncate">{s.name}</p>
+                              <p className="text-[10px] text-secondary/60 truncate">{s.email}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <span className="text-[10px] font-black text-secondary uppercase tracking-widest whitespace-nowrap">Operational User</span>
+                        </td>
+                        <td>
+                          <span className={`premium-status ${s.user_status === 'Active' ? 'status-active' : 'status-inactive'}`}>
+                            {s.user_status.toUpperCase()}
+                          </span>
+                        </td>
+                        <td className="text-secondary text-xs font-medium cursor-help" title={s.last_login ? new Date(s.last_login).toLocaleString() : 'Never'}>
+                          {getRelativeTimeString(s.last_login)}
+                        </td>
+                        <td className="text-right">
+                          <button className="p-2 text-secondary hover:text-primary transition-all">
+                            <MoreVertical size={18} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

@@ -20,7 +20,9 @@ import {
   ChevronRight,
   TrendingUp,
   ShieldCheck,
-  Zap
+  Zap,
+  Menu,
+  X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -58,6 +60,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -66,14 +69,72 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [router]);
 
+  // Close sidebar on route change
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
+
   if (!mounted || !user) return null;
+
+  const SidebarContent = () => (
+    <>
+      <nav className="flex-1 py-8 px-6 overflow-y-auto space-y-10 custom-scrollbar">
+        {NAV_GROUPS.map((group) => (
+          <div key={group.label} className="space-y-3">
+            <p className="px-3 text-[10px] font-black text-secondary/40 tracking-[0.2em] uppercase">{group.label}</p>
+            <div className="space-y-1">
+              {group.items.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                      isActive 
+                        ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                        : 'text-secondary hover:text-foreground hover:bg-accent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <item.icon size={18} className={isActive ? 'text-white' : 'text-secondary group-hover:text-primary transition-colors'} />
+                      <span>{item.label}</span>
+                    </div>
+                    {isActive && <motion.div layoutId="active-nav" className="w-1.5 h-1.5 rounded-full bg-white" />}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </nav>
+
+      <div className="p-6 border-t border-border mt-auto">
+        <button 
+          onClick={() => logout()}
+          className="w-full flex items-center gap-3 px-4 py-3 text-secondary font-bold text-sm hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all rounded-xl group"
+        >
+          <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
+          <span>Terminate Session</span>
+        </button>
+      </div>
+    </>
+  );
 
   return (
     <div className="min-h-screen bg-background flex flex-col selection:bg-primary selection:text-white">
       {/* Strategic Header */}
-      <header className="h-16 glass border-b border-border flex items-center justify-between px-8 sticky top-0 z-50">
-        <div className="flex items-center gap-12 flex-1">
-          <Link href="/dashboard" className="flex items-center gap-3 group">
+      <header className="h-16 glass border-b border-border flex items-center justify-between px-4 md:px-8 sticky top-0 z-50">
+        <div className="flex items-center gap-3 md:gap-12 flex-1 min-w-0">
+          {/* Mobile hamburger */}
+          <button
+            className="lg:hidden p-2 rounded-xl text-secondary hover:text-primary hover:bg-accent transition-all flex-shrink-0"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open menu"
+          >
+            <Menu size={22} />
+          </button>
+
+          <Link href="/dashboard" className="flex items-center gap-3 group flex-shrink-0">
             <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform duration-300">
               <Command size={20} />
             </div>
@@ -83,7 +144,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </Link>
           
-          <div className={`max-w-xl w-full relative transition-all duration-300 ${isSearchFocused ? 'max-w-2xl' : ''}`}>
+          {/* Search bar — hidden on mobile */}
+          <div className={`hidden md:block max-w-xl w-full relative transition-all duration-300 ${isSearchFocused ? 'max-w-2xl' : ''}`}>
             <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${isSearchFocused ? 'text-primary' : 'text-secondary'}`} />
             <input 
               type="text" 
@@ -95,8 +157,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-accent/50 rounded-full border border-border">
+        <div className="flex items-center gap-2 md:gap-6 flex-shrink-0">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-accent/50 rounded-full border border-border">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             <span className="text-[10px] font-bold text-secondary uppercase tracking-widest">Mainnet Live</span>
           </div>
@@ -106,72 +168,76 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-background"></span>
           </button>
           
-          <div className="h-6 w-px bg-border"></div>
+          <div className="hidden md:block h-6 w-px bg-border"></div>
 
           <div className="flex items-center gap-3">
-             <div className="flex flex-col items-end">
-                <p className="text-xs font-bold text-foreground">{user.email.split('@')[0]}</p>
-                <p className="text-[9px] text-secondary font-medium uppercase tracking-wider">Super Admin</p>
-             </div>
-             <div className="w-10 h-10 rounded-xl border border-border p-0.5 group cursor-pointer hover:border-primary transition-colors">
-                <img 
-                  src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.email}&backgroundColor=610B63&fontFamily=Outfit&fontWeight=700`} 
-                  alt="Avatar" 
-                  className="w-full h-full rounded-[10px] object-cover"
-                />
-             </div>
+            <div className="hidden md:flex flex-col items-end">
+              <p className="text-xs font-bold text-foreground">{user.email.split('@')[0]}</p>
+              <p className="text-[9px] text-secondary font-medium uppercase tracking-wider">Super Admin</p>
+            </div>
+            <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl border border-border p-0.5 group cursor-pointer hover:border-primary transition-colors">
+              <img 
+                src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.email}&backgroundColor=610B63&fontFamily=Outfit&fontWeight=700`} 
+                alt="Avatar" 
+                className="w-full h-full rounded-[10px] object-cover"
+              />
+            </div>
           </div>
         </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Command Sidebar */}
-        <aside className="w-72 bg-sidebar border-r border-border flex flex-col h-[calc(100vh-64px)]">
-          <nav className="flex-1 py-8 px-6 overflow-y-auto space-y-10 custom-scrollbar">
-            {NAV_GROUPS.map((group) => (
-              <div key={group.label} className="space-y-3">
-                <p className="px-3 text-[10px] font-black text-secondary/40 tracking-[0.2em] uppercase">{group.label}</p>
-                <div className="space-y-1">
-                  {group.items.map((item) => {
-                    const isActive = pathname === item.href;
-                    return (
-                      <Link
-                        key={item.label}
-                        href={item.href}
-                        className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                          isActive 
-                            ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                            : 'text-secondary hover:text-foreground hover:bg-accent'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <item.icon size={18} className={isActive ? 'text-white' : 'text-secondary group-hover:text-primary transition-colors'} />
-                          <span>{item.label}</span>
-                        </div>
-                        {isActive && <motion.div layoutId="active-nav" className="w-1.5 h-1.5 rounded-full bg-white" />}
-                      </Link>
-                    );
-                  })}
+        {/* Mobile sidebar overlay */}
+        <AnimatePresence>
+          {sidebarOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+                onClick={() => setSidebarOpen(false)}
+              />
+              {/* Mobile sidebar panel */}
+              <motion.aside
+                initial={{ x: -288 }}
+                animate={{ x: 0 }}
+                exit={{ x: -288 }}
+                transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                className="fixed top-0 left-0 z-50 w-72 bg-sidebar border-r border-border flex flex-col h-screen lg:hidden shadow-2xl"
+              >
+                {/* Mobile sidebar header */}
+                <div className="h-16 flex items-center justify-between px-6 border-b border-border">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center text-white">
+                      <Command size={16} />
+                    </div>
+                    <span className="font-black text-foreground">GENOVA</span>
+                  </div>
+                  <button
+                    onClick={() => setSidebarOpen(false)}
+                    className="p-2 rounded-xl text-secondary hover:text-foreground hover:bg-accent transition-all"
+                  >
+                    <X size={18} />
+                  </button>
                 </div>
-              </div>
-            ))}
-          </nav>
+                <SidebarContent />
+              </motion.aside>
+            </>
+          )}
+        </AnimatePresence>
 
-          <div className="p-6 border-t border-border mt-auto">
-            <button 
-              onClick={() => logout()}
-              className="w-full flex items-center gap-3 px-4 py-3 text-secondary font-bold text-sm hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all rounded-xl group"
-            >
-              <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
-              <span>Terminate Session</span>
-            </button>
-          </div>
+        {/* Desktop sidebar — always visible on lg+ */}
+        <aside className="hidden lg:flex w-72 bg-sidebar border-r border-border flex-col h-[calc(100vh-64px)] sticky top-16">
+          <SidebarContent />
         </aside>
 
         {/* Operational Main Content */}
         <main className="flex-1 overflow-y-auto bg-accent/20 custom-scrollbar relative">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] pointer-events-none"></div>
-          <div className="p-8 lg:p-12 max-w-7xl mx-auto">
+          <div className="p-4 sm:p-6 lg:p-8 xl:p-12 max-w-7xl mx-auto">
             {children}
           </div>
         </main>

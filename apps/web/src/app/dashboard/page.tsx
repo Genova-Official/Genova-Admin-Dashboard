@@ -90,15 +90,15 @@ export default function OverviewPage() {
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
       {/* Page Header */}
-      <div className="flex items-end justify-between">
+      <div className="flex flex-col gap-4">
         <div>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Command Center</h1>
+          <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">Command Center</h1>
           <div className="text-secondary font-semibold text-sm uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
             <Globe size={14} className="text-primary" /> Global Platform Oversight
           </div>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4">
            <div className={`flex items-center gap-2 px-4 py-2 rounded-xl bg-accent/50 border border-border transition-opacity duration-300 ${refreshing ? 'opacity-100' : 'opacity-0'}`}>
               <RefreshCcw size={14} className="text-primary animate-spin" />
               <span className="text-[10px] font-bold text-secondary uppercase">Updating Feed</span>
@@ -118,7 +118,7 @@ export default function OverviewPage() {
       </div>
 
       {/* High-Level Pulse Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <StatCard 
           label="Total Business Value" 
           value={formatCurrency(stats?.sales.total_volume || 0)} 
@@ -150,7 +150,7 @@ export default function OverviewPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
         {/* Main Intelligence Table */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
@@ -164,44 +164,48 @@ export default function OverviewPage() {
           </div>
 
           <div className="premium-card overflow-hidden">
-            <table className="premium-table">
-              <thead>
-                <tr>
-                  <th>S/N</th>
-                  <th>Entity</th>
-                  <th>Activity</th>
-                  <th>Value</th>
-                  <th>Status</th>
-                  <th>Timestamp</th>
-                </tr>
-              </thead>
-              <tbody>
-                {feed.slice(0, 8).map((item, i) => (
-                  <tr key={item.id} className="group cursor-pointer hover:bg-accent/30 transition-colors">
-                    <td className="text-secondary/50 font-mono text-xs">{String(i + 1).padStart(2, '0')}</td>
-                    <td className="font-bold text-foreground group-hover:text-primary transition-colors">{item.business}</td>
-                    <td className="text-secondary text-xs">{item.description}</td>
-                    <td className="font-mono font-bold text-foreground">
-                      {item.amount ? formatCurrency(item.amount) : '---'}
-                    </td>
-                    <td>
-                      <span className={`premium-status ${
-                        item.status === 'Paid' || item.status === 'Active' 
-                          ? 'status-active' 
-                          : item.status === 'Pending' 
-                            ? 'status-pending' 
-                            : 'status-inactive'
-                      }`}>
-                        {item.status}
-                      </span>
-                    </td>
-                    <td className="text-secondary/60 text-[10px] font-medium flex items-center gap-1.5" title={new Date(item.time).toLocaleString()}>
-                      <Clock size={10} /> {new Date(item.time).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="premium-table min-w-[640px]">
+                <thead>
+                  <tr>
+                    <th>S/N</th>
+                    <th>Entity</th>
+                    <th>Activity</th>
+                    <th>Value</th>
+                    <th>Status</th>
+                    <th>Timestamp</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {feed.slice(0, 8).map((item, i) => (
+                    <tr key={item.id} className="group cursor-pointer hover:bg-accent/30 transition-colors">
+                      <td className="text-secondary/50 font-mono text-xs">{String(i + 1).padStart(2, '0')}</td>
+                      <td className="font-bold text-foreground group-hover:text-primary transition-colors">{item.business}</td>
+                      <td className="text-secondary text-xs">{item.description}</td>
+                      <td className="font-mono font-bold text-foreground">
+                        {item.amount ? formatCurrency(item.amount) : '---'}
+                      </td>
+                      <td>
+                        <span className={`premium-status ${
+                          item.status === 'Paid' || item.status === 'Active' 
+                            ? 'status-active' 
+                            : item.status === 'Pending' 
+                              ? 'status-pending' 
+                              : 'status-inactive'
+                        }`}>
+                          {item.status}
+                        </span>
+                      </td>
+                      <td className="text-secondary/60 text-[10px] font-medium" title={new Date(item.time).toLocaleString()}>
+                        <div className="flex items-center gap-1.5">
+                          <Clock size={10} /> {new Date(item.time).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 

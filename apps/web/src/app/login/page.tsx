@@ -75,7 +75,7 @@ export default function LoginPage() {
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-[480px] w-full bg-background rounded-3xl shadow-2xl shadow-primary/5 border border-border p-10 relative z-10"
+        className="max-w-[480px] w-full bg-background rounded-3xl shadow-2xl shadow-primary/5 border border-border p-6 sm:p-10 relative z-10"
       >
         <div className="mb-8">
           <h1 className="text-2xl font-black text-foreground tracking-tight">
