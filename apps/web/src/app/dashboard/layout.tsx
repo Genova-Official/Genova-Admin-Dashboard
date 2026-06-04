@@ -75,7 +75,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="flex items-center gap-12 flex-1">
           <Link href="/dashboard" className="flex items-center gap-3 group">
             <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform duration-300">
-              <Command size={20} weight="bold" />
+              <Command size={20} />
             </div>
             <div className="flex flex-col">
               <span className="text-foreground font-black text-lg tracking-tight leading-none">GENOVA</span>

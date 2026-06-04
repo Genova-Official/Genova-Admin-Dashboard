@@ -5,127 +5,203 @@ import { motion } from 'framer-motion';
 import api from '@/lib/api';
 import { 
   TrendingUp, 
-  Users, 
-  ShoppingBag, 
   ArrowUpRight,
-  ArrowDownRight,
   Filter,
-  Download
+  Download,
+  BarChart3,
+  Calendar
 } from 'lucide-react';
 
+interface DailySale {
+  day: string;
+  total: number;
+  count: number;
+}
+
 export default function AnalyticsPage() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<{ daily_sales: DailySale[]; top_businesses: any[] } | null>(null);
+  const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/data/analytics/')
-      .then(res => setData(res.data))
+    Promise.all([
+      api.get('/analytics/'),
+      api.get('/stats/global/'),
+    ])
+      .then(([analyticsRes, statsRes]) => {
+        setData(analyticsRes.data);
+        setStats(statsRes.data);
+      })
       .catch(err => console.error(err))
       .finally(() => setLoading(false));
   }, []);
 
+  const formatCurrency = (val: number) =>
+    new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 })
+      .format(val || 0)
+      .replace('NGN', '₦');
+
+  const maxTotal = data?.daily_sales?.length
+    ? Math.max(...data.daily_sales.map(d => Number(d.total)))
+    : 1;
+
   if (loading) return (
-    <div className="flex items-center justify-center h-full">
-      <div className="w-8 h-8 border-4 border-[#610B63] border-t-transparent rounded-full animate-spin" />
+    <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
+      <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="text-secondary text-sm font-bold animate-pulse uppercase tracking-widest">
+        Loading Platform Analytics...
+      </p>
     </div>
   );
 
   return (
-    <div className="space-y-12 max-w-7xl">
+    <div className="space-y-10 animate-in fade-in duration-700 max-w-7xl">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-black text-[#610B63] tracking-tight">Platform Analytics</h1>
-          <p className="text-gray-400 font-bold text-sm uppercase tracking-widest mt-1">Ecosystem Growth & Trends</p>
+          <h1 className="text-3xl font-black text-foreground tracking-tight">Platform Analytics</h1>
+          <p className="text-secondary font-semibold text-sm uppercase tracking-[0.2em] mt-1 flex items-center gap-2">
+            <BarChart3 size={14} className="text-primary" /> Ecosystem Growth &amp; Trends
+          </p>
         </div>
-        <div className="flex items-center gap-4">
-           <button className="flex items-center gap-2 px-6 py-2 bg-white border border-gray-100 rounded-lg text-sm font-bold text-gray-600 shadow-sm">
-              <Filter size={16} /> Filter
-           </button>
-           <button className="flex items-center gap-2 px-6 py-2 bg-[#610B63] text-white rounded-lg text-sm font-bold shadow-sm">
-              <Download size={16} /> Export Intelligence
-           </button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-4 py-2 bg-background border border-border rounded-xl text-xs font-bold text-secondary">
+            <Calendar size={14} /> Last 30 Days
+          </div>
+          <button className="flex items-center gap-2 px-4 py-2 bg-background border border-border rounded-xl text-xs font-bold text-secondary hover:text-primary hover:border-primary transition-all">
+            <Filter size={14} /> Filter
+          </button>
+          <button className="premium-button text-xs">
+            <Download size={14} /> Export Intelligence
+          </button>
         </div>
       </div>
 
-      {/* Growth Chart Placeholder */}
-      <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-         <div className="flex items-center justify-between mb-10">
-            <div>
-               <h3 className="text-xl font-bold text-gray-900">Ecosystem Growth</h3>
-               <p className="text-sm text-gray-400 font-medium">Daily transaction volume across all businesses.</p>
-            </div>
-            <div className="flex items-center gap-2 text-green-500 font-bold">
-               <ArrowUpRight size={20} />
-               <span>+14.2%</span>
-            </div>
-         </div>
+      {/* KPI Strip */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: 'Total Volume', value: formatCurrency(stats?.sales?.total_volume || 0) },
+          { label: 'Active Businesses', value: stats?.businesses?.total || 0 },
+          { label: 'Transactions (Month)', value: (stats?.sales?.transactions_month || 0).toLocaleString() },
+          { label: 'VAT Collected', value: formatCurrency(stats?.sales?.total_vat || 0) },
+        ].map((kpi, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.08 }}
+            className="premium-card p-5"
+          >
+            <p className="text-[10px] font-black text-secondary/40 uppercase tracking-widest mb-1">{kpi.label}</p>
+            <p className="text-xl font-black text-foreground tracking-tight">{kpi.value}</p>
+          </motion.div>
+        ))}
+      </div>
 
-         <div className="h-[300px] w-full flex items-end justify-between gap-2 px-4">
-            {/* Simple Animated SVG Bar Chart */}
-            {data?.daily_sales.map((day: any, i: number) => (
-              <motion.div 
-                key={i}
-                initial={{ height: 0 }}
-                animate={{ height: `${(day.total / 10000) * 100}%` }}
-                transition={{ delay: i * 0.05, duration: 1 }}
-                className="flex-1 bg-[#FDE8FE] hover:bg-[#610B63] transition-colors rounded-t-sm group relative"
-              >
-                 <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                    N{day.total.toLocaleString()}
-                 </div>
-              </motion.div>
-            ))}
-         </div>
-         <div className="flex justify-between mt-4 text-[10px] font-black text-gray-400 uppercase tracking-widest px-4">
-            <span>30 Days Ago</span>
-            <span>Today</span>
-         </div>
+      {/* Main Chart */}
+      <div className="premium-card p-8">
+        <div className="flex items-center justify-between mb-10">
+          <div>
+            <h3 className="text-xl font-bold text-foreground">Ecosystem Growth</h3>
+            <p className="text-sm text-secondary font-medium mt-1">Daily transaction volume across all businesses</p>
+          </div>
+          <div className="flex items-center gap-2 text-green-600 font-bold text-sm bg-green-500/10 border border-green-500/20 px-3 py-1.5 rounded-xl">
+            <ArrowUpRight size={16} />
+            <span>Live Data</span>
+          </div>
+        </div>
+
+        {data?.daily_sales && data.daily_sales.length > 0 ? (
+          <>
+            <div className="h-[280px] w-full flex items-end justify-between gap-1.5 px-2">
+              {data.daily_sales.map((day, i) => {
+                const heightPct = maxTotal > 0 ? (Number(day.total) / maxTotal) * 100 : 0;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ height: 0 }}
+                    animate={{ height: `${heightPct}%` }}
+                    transition={{ delay: i * 0.04, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex-1 bg-primary/10 hover:bg-primary transition-colors rounded-t-lg group relative cursor-pointer min-h-[4px]"
+                    style={{ minHeight: '4px' }}
+                  >
+                    {/* Tooltip */}
+                    <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-foreground text-background text-[9px] px-2.5 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 shadow-lg pointer-events-none">
+                      <p className="font-bold">{formatCurrency(Number(day.total))}</p>
+                      <p className="opacity-60">{day.count} txns · {new Date(day.day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+            <div className="flex justify-between mt-4 text-[10px] font-black text-secondary/40 uppercase tracking-widest px-2">
+              <span>{new Date(data.daily_sales[0]?.day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
+              <span>Today</span>
+            </div>
+          </>
+        ) : (
+          <div className="h-[280px] flex items-center justify-center">
+            <p className="text-secondary/40 font-bold uppercase tracking-widest text-sm">No transaction data in this period</p>
+          </div>
+        )}
       </div>
 
       {/* Analytics Insight Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-         <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-            <h4 className="text-lg font-bold text-gray-900 mb-6">Active vs Inactive Businesses</h4>
-            <div className="space-y-6">
-               {[
-                 { label: 'Active (Daily)', value: 842, color: 'bg-green-500', percent: 68 },
-                 { label: 'Passive (Weekly)', value: 312, color: 'bg-blue-500', percent: 25 },
-                 { label: 'Inactive', value: 88, color: 'bg-gray-200', percent: 7 },
-               ].map((item, i) => (
-                 <div key={i} className="space-y-2">
-                    <div className="flex justify-between text-sm font-bold">
-                       <span className="text-gray-500">{item.label}</span>
-                       <span className="text-[#610B63]">{item.value}</span>
-                    </div>
-                    <div className="h-2 w-full bg-gray-50 rounded-full overflow-hidden">
-                       <motion.div 
-                         initial={{ width: 0 }}
-                         animate={{ width: `${item.percent}%` }}
-                         className={`h-full ${item.color}`}
-                       />
-                    </div>
-                 </div>
-               ))}
-            </div>
-         </div>
+        {/* Business Activity Breakdown */}
+        <div className="premium-card p-8">
+          <h4 className="text-lg font-bold text-foreground mb-6">Business Activity Breakdown</h4>
+          <div className="space-y-6">
+            {[
+              { label: 'Active Businesses', value: stats?.businesses?.active || 0, percent: stats?.businesses?.total ? Math.round(((stats.businesses.active || 0) / stats.businesses.total) * 100) : 0, color: 'bg-green-500' },
+              { label: 'Total Locations', value: stats?.branches?.total || 0, percent: 100, color: 'bg-primary' },
+              { label: 'Staff Force', value: stats?.staff?.total || 0, percent: 100, color: 'bg-purple-400' },
+            ].map((item, i) => (
+              <div key={i} className="space-y-2">
+                <div className="flex justify-between text-sm font-bold">
+                  <span className="text-secondary">{item.label}</span>
+                  <span className="text-primary">{item.value.toLocaleString()}</span>
+                </div>
+                <div className="h-2 w-full bg-accent rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${item.percent}%` }}
+                    transition={{ delay: i * 0.15, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    className={`h-full ${item.color} rounded-full`}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-         <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-            <h4 className="text-lg font-bold text-gray-900 mb-6">Top Industries</h4>
-            <div className="space-y-4">
-               {[
-                 { label: 'Retail & Supermarkets', share: '42%' },
-                 { label: 'Hospitality & Hotels', share: '18%' },
-                 { label: 'Pharmacies', share: '15%' },
-                 { label: 'Service Providers', share: '12%' },
-                 { label: 'Others', share: '13%' },
-               ].map((item, i) => (
-                 <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                    <span className="text-sm font-bold text-gray-600">{item.label}</span>
-                    <span className="text-sm font-black text-[#610B63]">{item.share}</span>
-                 </div>
-               ))}
-            </div>
-         </div>
+        {/* Inventory Snapshot */}
+        <div className="premium-card p-8">
+          <h4 className="text-lg font-bold text-foreground mb-6">Inventory Snapshot</h4>
+          <div className="space-y-4">
+            {[
+              { label: 'Total Inventory Items', value: (stats?.inventory?.total_count || 0).toLocaleString() },
+              { label: 'Inventory Asset Value', value: formatCurrency(stats?.inventory?.total_value || 0) },
+              { label: 'Unique Product Lines', value: (stats?.inventory?.total_products || 0).toLocaleString() },
+              { label: 'Low Stock Alerts', value: (stats?.inventory?.low_stock_alerts || 0).toLocaleString(), alert: (stats?.inventory?.low_stock_alerts || 0) > 0 },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className={`flex items-center justify-between p-4 rounded-xl border transition-colors ${
+                  item.alert
+                    ? 'bg-orange-500/5 border-orange-500/20'
+                    : 'bg-accent/30 border-border hover:border-primary/20'
+                }`}
+              >
+                <span className={`text-sm font-bold ${item.alert ? 'text-orange-600' : 'text-secondary'}`}>{item.label}</span>
+                <span className={`text-sm font-black ${item.alert ? 'text-orange-600' : 'text-primary'}`}>{item.value}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -46,8 +46,9 @@ export default function BusinessesPage() {
     setLoading(true);
     try {
       const res = await api.get(`/businesses/?search=${search}&page=${page}`);
-      setBusinesses(res.data.results);
-      setTotalCount(res.data.count);
+      const data = Array.isArray(res.data) ? res.data : (res.data.results || []);
+      setBusinesses(data);
+      setTotalCount(Array.isArray(res.data) ? res.data.length : (res.data.count || 0));
     } catch (err) {
       console.error('Failed to fetch businesses:', err);
     } finally {

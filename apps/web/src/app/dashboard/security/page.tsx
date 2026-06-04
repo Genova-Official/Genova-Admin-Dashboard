@@ -1,6 +1,8 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import api from '@/lib/api';
 import { 
   ShieldCheck, 
   Lock, 
@@ -16,13 +18,54 @@ import {
   ChevronRight
 } from 'lucide-react';
 
+interface ActivityItem {
+  id: string;
+  type: string;
+  business: string;
+  location: string;
+  amount?: number;
+  time: string;
+  status: string;
+}
+
 export default function SecurityPage() {
+  const [stats, setStats] = useState<any>(null);
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadSecurityData() {
+      try {
+        const [statsRes, activityRes] = await Promise.all([
+          api.get('/stats/global/'),
+          api.get('/activity/')
+        ]);
+        setStats(statsRes.data);
+        setActivities(activityRes.data || []);
+      } catch (err) {
+        console.error('Failed to fetch security telemetry', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadSecurityData();
+  }, []);
+
   const SECURITY_METRICS = [
     { label: 'System Integrity', value: '100%', status: 'optimal' },
-    { label: 'Active Sessions', value: '4', status: 'normal' },
+    { label: 'Active Staff Accounts', value: stats?.staff?.total || '0', status: 'monitored' },
     { label: 'Encryption Standard', value: 'AES-256', status: 'secure' },
-    { label: 'Last Threat Scan', value: '2m ago', status: 'clean' },
+    { label: 'Operational Status', value: stats ? 'Healthy' : 'Syncing', status: stats ? 'active' : 'pending' },
   ];
+
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
+      <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="text-secondary text-sm font-bold animate-pulse uppercase tracking-widest text-center">
+        Syncing security vault...
+      </p>
+    </div>
+  );
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500">
@@ -33,7 +76,7 @@ export default function SecurityPage() {
         </div>
 
         <div className="flex items-center gap-4">
-           <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 text-green-600 border border-green-500/20 rounded-xl text-xs font-bold">
+           <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 text-green-600 border border-green-500/20 rounded-xl text-xs font-bold uppercase tracking-wider">
               <ShieldCheck size={14} /> Firewall Active
            </div>
         </div>
@@ -90,23 +133,27 @@ export default function SecurityPage() {
              <Terminal className="text-primary" /> Security Activity
           </h2>
           <div className="premium-card p-6 space-y-6">
-            {[
-              { type: 'auth', msg: 'Successful login from Abuja, NG', time: '12m ago', level: 'info' },
-              { type: 'key', msg: 'Production API key rotated', time: '2h ago', level: 'warning' },
-              { type: 'access', msg: 'New branch provisioned: Lekki Phase 1', time: '5h ago', level: 'info' },
-              { type: 'alert', msg: 'Failed login attempt detected', time: '1d ago', level: 'danger' },
-            ].map((log, i) => (
-              <div key={i} className="flex gap-4">
-                <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-                  log.level === 'danger' ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 
-                  log.level === 'warning' ? 'bg-amber-500' : 'bg-blue-500'
-                }`}></div>
-                <div>
-                  <p className="text-xs font-bold text-foreground leading-tight">{log.msg}</p>
-                  <p className="text-[10px] font-medium text-secondary mt-1 uppercase tracking-wider">{log.time}</p>
+            {activities.length > 0 ? (
+              activities.slice(0, 4).map((log, i) => (
+                <div key={log.id || i} className="flex gap-4">
+                  <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
+                    log.status.toLowerCase() === 'failed' ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-blue-500'
+                  }`}></div>
+                  <div>
+                    <p className="text-xs font-bold text-foreground leading-tight">
+                      {log.type === 'sale' 
+                        ? `Transaction event at ${log.business}` 
+                        : `Admin operations audit: ${log.business}`}
+                    </p>
+                    <p className="text-[10px] font-medium text-secondary mt-1 uppercase tracking-wider">
+                      {new Date(log.time).toLocaleTimeString()} • {log.location || 'Global'}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <div className="text-xs text-secondary/60 font-medium">No recent security events detected.</div>
+            )}
             <button className="w-full pt-4 border-t border-border text-xs font-bold text-primary hover:underline flex items-center justify-center gap-2">
               View Comprehensive Audit Logs <ChevronRight size={14} />
             </button>

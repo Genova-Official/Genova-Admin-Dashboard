@@ -179,7 +179,7 @@ export default function OverviewPage() {
                 {feed.slice(0, 8).map((item, i) => (
                   <tr key={item.id} className="group cursor-pointer hover:bg-accent/30 transition-colors">
                     <td className="text-secondary/50 font-mono text-xs">{String(i + 1).padStart(2, '0')}</td>
-                    <td className="font-bold text-foreground group-hover:text-primary transition-colors">{item.business_name}</td>
+                    <td className="font-bold text-foreground group-hover:text-primary transition-colors">{item.business}</td>
                     <td className="text-secondary text-xs">{item.description}</td>
                     <td className="font-mono font-bold text-foreground">
                       {item.amount ? formatCurrency(item.amount) : '---'}
@@ -196,7 +196,7 @@ export default function OverviewPage() {
                       </span>
                     </td>
                     <td className="text-secondary/60 text-[10px] font-medium flex items-center gap-1.5">
-                      <Clock size={10} /> {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      <Clock size={10} /> {new Date(item.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </td>
                   </tr>
                 ))}

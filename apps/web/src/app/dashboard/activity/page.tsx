@@ -22,13 +22,12 @@ import {
 interface ActivityItem {
   id: string;
   type: 'sale' | 'onboarding' | 'system';
-  description: string;
-  business_name: string;
-  location_name?: string;
-  initiated_by?: string;
+  description?: string;
+  // API returns these field names:
+  business: string;
+  location: string;
   amount?: number;
-  item_count?: number;
-  timestamp: string;
+  time: string;
   status: string;
 }
 
@@ -126,26 +125,16 @@ export default function ActivityMonitorPage() {
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-3">
-                      <h3 className="font-black text-lg text-foreground tracking-tight">{item.business_name}</h3>
+                      <h3 className="font-black text-lg text-foreground tracking-tight">{item.business}</h3>
                       <span className="text-[10px] font-black uppercase tracking-widest text-secondary/40 px-2 py-0.5 border border-border rounded-md bg-accent/30">
-                        {item.type === 'sale' ? 'Sale Event' : 'Onboarding'}
+                        Sale Event
                       </span>
                     </div>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-bold text-secondary">
                       <div className="flex items-center gap-1.5">
                         <MapPin size={14} className="text-secondary/30" />
-                        {item.location_name || 'Global HQ'}
+                        {item.location || 'Global HQ'}
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <User size={14} className="text-secondary/30" />
-                        {item.initiated_by || 'System'}
-                      </div>
-                      {item.item_count && (
-                        <div className="flex items-center gap-1.5">
-                          <Package size={14} className="text-secondary/30" />
-                          {item.item_count} items
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -157,14 +146,14 @@ export default function ActivityMonitorPage() {
                    <div className="flex items-center gap-4">
                       <div className="flex items-center gap-1.5 text-[10px] font-black text-secondary/40 uppercase tracking-widest">
                         <Clock size={12} />
-                        {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                        {new Date(item.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                       </div>
                       <div className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest ${
                         item.status.toLowerCase() === 'paid' || item.status.toLowerCase() === 'active'
                         ? 'bg-green-500/10 text-green-600 border border-green-500/20'
                         : 'bg-amber-500/10 text-amber-600 border border-amber-500/20'
                       }`}>
-                        {item.status.toLowerCase() === 'paid' && <CheckCircle2 size={10} />}
+                        {(item.status.toLowerCase() === 'paid') && <CheckCircle2 size={10} />}
                         {item.status}
                       </div>
                    </div>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import api from '@/lib/api';
 import { 
   ChevronLeft, 
+  ChevronRight,
   Filter,
   Share2,
   Building2,
