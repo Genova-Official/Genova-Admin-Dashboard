@@ -21,7 +21,6 @@ export async function GET(request: NextRequest) {
         pb.is_verified,
         pb.created_at,
         pb.user_id,
-        au.user_status AS status,
         au.last_login,
         (
           SELECT COUNT(*) FROM "Account_location" al WHERE al.business_admin_id = pb.user_id
@@ -31,7 +30,15 @@ export async function GET(request: NextRequest) {
         ) AS staff_count,
         (
           SELECT COALESCE(SUM(ss.total_price), 0) FROM "Sales_sales" ss WHERE ss.owner_id = pb.user_id
-        ) AS total_sales_volume
+        ) AS total_sales_volume,
+        (
+          SELECT COUNT(*) FROM "Sales_sales" ss
+          WHERE ss.owner_id = pb.user_id
+          AND ss.created_at >= NOW() - INTERVAL '30 days'
+        ) AS recent_sales_count,
+        (
+          SELECT MAX(ss.created_at) FROM "Sales_sales" ss WHERE ss.owner_id = pb.user_id
+        ) AS last_sale_at
       FROM "Profile_business" pb
       LEFT JOIN "Account_user" au ON au.id = pb.user_id
       ${searchClause}
@@ -39,19 +46,24 @@ export async function GET(request: NextRequest) {
       params
     );
 
-    const businesses = bizRes.rows.map((row: any) => ({
-      id: row.user_id,
-      business_id: row.id,
-      name: row.name || 'Unnamed Business',
-      email: row.email,
-      status: row.status || 'Active',
-      is_verified: row.is_verified,
-      created_at: row.created_at,
-      last_login: row.last_login,
-      location_count: parseInt(row.location_count || '0', 10),
-      staff_count: parseInt(row.staff_count || '0', 10),
-      total_sales_volume: parseFloat(row.total_sales_volume || '0'),
-    }));
+    const businesses = bizRes.rows.map((row: any) => {
+      const recentSales = parseInt(row.recent_sales_count || '0', 10);
+      return {
+        id: row.user_id,
+        business_id: row.id,
+        name: row.name || 'Unnamed Business',
+        email: row.email,
+        // Active only if they had sales in the last 30 days
+        status: recentSales > 0 ? 'Active' : 'Inactive',
+        is_verified: row.is_verified,
+        created_at: row.created_at,
+        last_login: row.last_sale_at || row.last_login,
+        location_count: parseInt(row.location_count || '0', 10),
+        staff_count: parseInt(row.staff_count || '0', 10),
+        total_sales_volume: parseFloat(row.total_sales_volume || '0'),
+        recent_sales_count: recentSales,
+      };
+    });
 
     return NextResponse.json(businesses);
   } catch (error: any) {
