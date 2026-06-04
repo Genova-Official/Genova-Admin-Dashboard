@@ -149,9 +149,9 @@ export default function ActivityMonitorPage() {
                       <p className="text-xl font-black text-foreground">{formatCurrency(item.amount)}</p>
                    )}
                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-1.5 text-[10px] font-black text-secondary/40 uppercase tracking-widest">
+                      <div className="flex items-center gap-1.5 text-[10px] font-black text-secondary/40 uppercase tracking-widest" title={new Date(item.time).toLocaleString()}>
                         <Clock size={12} />
-                        {new Date(item.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                        {new Date(item.time).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                       </div>
                       <div className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest ${
                         item.status.toLowerCase() === 'paid' || item.status.toLowerCase() === 'active'

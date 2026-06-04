@@ -595,8 +595,8 @@ export default function BusinessDetailPage({ params }: { params: Promise<{ id: s
                                   {sale.payment_status.toUpperCase()}
                                 </span>
                               </td>
-                              <td className="text-secondary text-xs py-3.5">
-                                {new Date(sale.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              <td className="text-secondary text-xs py-3.5" title={new Date(sale.created_at).toLocaleString()}>
+                                {new Date(sale.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                               </td>
                             </tr>
                           ))

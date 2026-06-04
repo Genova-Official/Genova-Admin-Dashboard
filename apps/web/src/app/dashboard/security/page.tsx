@@ -145,8 +145,8 @@ export default function SecurityPage() {
                         ? `Transaction event at ${log.business}` 
                         : `Admin operations audit: ${log.business}`}
                     </p>
-                    <p className="text-[10px] font-medium text-secondary mt-1 uppercase tracking-wider">
-                      {new Date(log.time).toLocaleTimeString()} • {log.location || 'Global'}
+                    <p className="text-[10px] font-medium text-secondary mt-1 uppercase tracking-wider" title={new Date(log.time).toLocaleString()}>
+                      {new Date(log.time).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })} • {log.location || 'Global'}
                     </p>
                   </div>
                 </div>

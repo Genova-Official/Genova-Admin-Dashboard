@@ -195,8 +195,8 @@ export default function OverviewPage() {
                         {item.status}
                       </span>
                     </td>
-                    <td className="text-secondary/60 text-[10px] font-medium flex items-center gap-1.5">
-                      <Clock size={10} /> {new Date(item.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <td className="text-secondary/60 text-[10px] font-medium flex items-center gap-1.5" title={new Date(item.time).toLocaleString()}>
+                      <Clock size={10} /> {new Date(item.time).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </td>
                   </tr>
                 ))}

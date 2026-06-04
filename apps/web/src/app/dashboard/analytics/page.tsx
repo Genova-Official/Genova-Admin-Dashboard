@@ -103,7 +103,7 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: 'Total Volume', value: formatCurrency(stats?.sales?.total_volume || 0) },
-          { label: 'Active Businesses', value: stats?.businesses?.total || 0 },
+          { label: 'Active Businesses', value: stats?.businesses?.active || 0 },
           { label: 'Transactions (Month)', value: (stats?.sales?.transactions_month || 0).toLocaleString() },
           { label: 'VAT Collected', value: formatCurrency(stats?.sales?.total_vat || 0) },
         ].map((kpi, i) => (
