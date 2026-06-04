@@ -30,8 +30,12 @@ export async function GET(
           AND ss.created_at >= NOW() - INTERVAL '30 days'
         ) AS recent_sales_count,
         (
-          SELECT MAX(ss.created_at) FROM "Sales_sales" ss WHERE ss.owner_id = pb.user_id
-        ) AS last_sale_at
+          SELECT GREATEST(
+            (SELECT MAX(ss.created_at) FROM "Sales_sales" ss WHERE ss.owner_id = pb.user_id),
+            (SELECT MAX(ii.created_at) FROM "Inventory_inventory" ii WHERE ii.owner_id = pb.user_id),
+            (SELECT MAX(le.created_at) FROM "Log_expense" le WHERE le.user_id = pb.user_id)
+          )
+        ) AS last_activity_at
       FROM "Profile_business" pb
       LEFT JOIN "Account_user" au ON au.id = pb.user_id
       WHERE pb.user_id = $1 OR pb.id = $2`,
@@ -115,7 +119,7 @@ export async function GET(
       is_verified: owner.is_verified || false,
       is_active: owner.is_active || false,
       created_at: owner.created_at,
-      last_login: owner.last_sale_at || owner.last_login,
+      last_login: owner.last_activity_at || owner.last_login,
       locations: locationsRes.rows.map((loc: any) => ({
         id: String(loc.id),
         location_name: loc.location_name,

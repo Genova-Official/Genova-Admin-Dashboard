@@ -37,8 +37,12 @@ export async function GET(request: NextRequest) {
           AND ss.created_at >= NOW() - INTERVAL '30 days'
         ) AS recent_sales_count,
         (
-          SELECT MAX(ss.created_at) FROM "Sales_sales" ss WHERE ss.owner_id = pb.user_id
-        ) AS last_sale_at
+          SELECT GREATEST(
+            (SELECT MAX(ss.created_at) FROM "Sales_sales" ss WHERE ss.owner_id = pb.user_id),
+            (SELECT MAX(ii.created_at) FROM "Inventory_inventory" ii WHERE ii.owner_id = pb.user_id),
+            (SELECT MAX(le.created_at) FROM "Log_expense" le WHERE le.user_id = pb.user_id)
+          )
+        ) AS last_activity_at
       FROM "Profile_business" pb
       LEFT JOIN "Account_user" au ON au.id = pb.user_id
       ${searchClause}
@@ -57,7 +61,7 @@ export async function GET(request: NextRequest) {
         status: recentSales > 0 ? 'Active' : 'Inactive',
         is_verified: row.is_verified,
         created_at: row.created_at,
-        last_login: row.last_sale_at || row.last_login,
+        last_login: row.last_activity_at || row.last_login,
         location_count: parseInt(row.location_count || '0', 10),
         staff_count: parseInt(row.staff_count || '0', 10),
         total_sales_volume: parseFloat(row.total_sales_volume || '0'),
