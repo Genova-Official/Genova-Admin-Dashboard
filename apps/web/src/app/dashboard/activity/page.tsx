@@ -123,7 +123,7 @@ export default function ActivityMonitorPage() {
                     {item.type === 'sale' ? <TrendingUp size={24} /> : <Building2 size={24} />}
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <div className="flex items-center gap-3">
                       <h3 className="font-black text-lg text-foreground tracking-tight">{item.business}</h3>
                       <span className="text-[10px] font-black uppercase tracking-widest text-secondary/40 px-2 py-0.5 border border-border rounded-md bg-accent/30">
@@ -131,11 +131,16 @@ export default function ActivityMonitorPage() {
                       </span>
                     </div>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-bold text-secondary">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 text-secondary/80">
                         <MapPin size={14} className="text-secondary/30" />
                         {item.location || 'Global HQ'}
                       </div>
                     </div>
+                    {item.description && (
+                      <p className="text-xs text-secondary font-medium tracking-tight bg-accent/15 border border-border/30 rounded-lg px-3 py-1.5 inline-block">
+                        {item.description}
+                      </p>
+                    )}
                   </div>
                 </div>
 
