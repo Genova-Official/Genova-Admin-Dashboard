@@ -17,7 +17,10 @@ import {
   Store,
   ChevronRight,
   RefreshCcw,
-  Clock
+  Clock,
+  Bell,
+  Send,
+  Loader2
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -45,6 +48,12 @@ export default function OverviewPage() {
   const [feed, setFeed] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Broadcast state
+  const [broadcastTitle, setBroadcastTitle] = useState('');
+  const [broadcastMessage, setBroadcastMessage] = useState('');
+  const [broadcasting, setBroadcasting] = useState(false);
+  const [broadcastResult, setBroadcastResult] = useState<{ status: 'success' | 'error'; message: string } | null>(null);
 
   const fetchData = async () => {
     try {
@@ -78,6 +87,28 @@ export default function OverviewPage() {
       currency: 'NGN',
       minimumFractionDigits: 0
     }).format(val).replace('NGN', '₦');
+  };
+
+  const sendBroadcast = async () => {
+    if (!broadcastMessage.trim()) return;
+    setBroadcasting(true);
+    setBroadcastResult(null);
+    try {
+      const res = await api.post('/Notifications/admin/broadcast/', {
+        title: broadcastTitle.trim() || 'Genova Announcement',
+        message: broadcastMessage.trim(),
+      });
+      setBroadcastResult({ status: 'success', message: res.data.message || 'Broadcast sent successfully!' });
+      setBroadcastMessage('');
+      setBroadcastTitle('');
+    } catch (err: any) {
+      setBroadcastResult({
+        status: 'error',
+        message: err?.response?.data?.error || 'Failed to send broadcast. Please try again.',
+      });
+    } finally {
+      setBroadcasting(false);
+    }
   };
 
   if (loading) return (
@@ -256,6 +287,44 @@ export default function OverviewPage() {
                     <span className="text-[10px] font-bold text-green-500 bg-green-500/10 px-2 py-0.5 rounded-full">HEALTHY</span>
                   </div>
                </div>
+            </div>
+
+            {/* Broadcast Notification Panel */}
+            <div className="premium-card p-6 bg-primary/[0.02] border-primary/10">
+              <h3 className="text-xs font-black text-primary uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                <Bell size={13} /> Broadcast to All Devices
+              </h3>
+              <div className="space-y-3">
+                <input
+                  type="text"
+                  placeholder="Title (optional)"
+                  value={broadcastTitle}
+                  onChange={e => setBroadcastTitle(e.target.value)}
+                  className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary/40 transition-colors"
+                />
+                <textarea
+                  placeholder="Type your broadcast message..."
+                  value={broadcastMessage}
+                  onChange={e => setBroadcastMessage(e.target.value)}
+                  rows={3}
+                  className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary/40 transition-colors resize-none"
+                />
+                <button
+                  onClick={sendBroadcast}
+                  disabled={broadcasting || !broadcastMessage.trim()}
+                  className="w-full flex items-center justify-center gap-2 bg-primary text-white font-bold text-sm py-2.5 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {broadcasting
+                    ? <Loader2 size={14} className="animate-spin" />
+                    : <Send size={14} />}
+                  {broadcasting ? 'Sending...' : 'Send Broadcast'}
+                </button>
+                {broadcastResult && (
+                  <p className={`text-xs font-bold text-center ${broadcastResult.status === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+                    {broadcastResult.message}
+                  </p>
+                )}
+              </div>
             </div>
         </div>
       </div>
