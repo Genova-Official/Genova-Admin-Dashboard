@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const BACKEND_URL = process.env.BACKEND_API_URL || 'https://api.genovatransact.com/api/console';
+const BACKEND_ROOT_URL = process.env.BACKEND_ROOT_URL || 'https://api.genovatransact.com';
 
 async function handleProxy(request: NextRequest, path: string[]) {
   const pathStr = path.join('/');
   const searchParams = request.nextUrl.searchParams.toString();
-  const url = `${BACKEND_URL}/${pathStr}/${searchParams ? '?' + searchParams : ''}`;
+  
+  // Direct top-level endpoints like Notifications route to BACKEND_ROOT_URL
+  const isTopLevelApp = path[0] === 'Notifications' || path[0] === 'Account';
+  const baseUrl = isTopLevelApp ? BACKEND_ROOT_URL : BACKEND_URL;
+  const url = `${baseUrl}/${pathStr}/${searchParams ? '?' + searchParams : ''}`;
 
   const headers = new Headers();
   const authHeader = request.headers.get('Authorization');

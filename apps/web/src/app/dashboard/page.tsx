@@ -310,14 +310,15 @@ export default function OverviewPage() {
                   className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary/40 transition-colors resize-none"
                 />
                 <button
+                  type="button"
                   onClick={sendBroadcast}
                   disabled={broadcasting || !broadcastMessage.trim()}
-                  className="w-full flex items-center justify-center gap-2 bg-primary text-white font-bold text-sm py-2.5 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-2 bg-[#610B63] hover:bg-[#4a084c] text-white font-black text-sm py-3 px-4 rounded-xl shadow-md transition-all active:scale-[0.99] disabled:bg-[#610B63]/50 disabled:text-white/70 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {broadcasting
-                    ? <Loader2 size={14} className="animate-spin" />
-                    : <Send size={14} />}
-                  {broadcasting ? 'Sending...' : 'Send Broadcast'}
+                    ? <Loader2 size={16} className="animate-spin text-white" />
+                    : <Send size={16} className="text-white" />}
+                  <span>{broadcasting ? 'Dispatching Broadcast...' : 'Send Broadcast'}</span>
                 </button>
                 {broadcastResult && (
                   <p className={`text-xs font-bold text-center ${broadcastResult.status === 'success' ? 'text-green-500' : 'text-red-500'}`}>
